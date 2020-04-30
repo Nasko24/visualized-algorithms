@@ -31,4 +31,12 @@ export class HeaderComponent implements OnInit {
   onSpeedChosen(speed: string) {
     this.currentSpeed = speed;
   }
+
+  onAlgorithmChosen(algorithm: string) {
+    this.currentAlgorithm = algorithm;
+  }
+
+  onMazeChosen(maze: string) {
+    // TODO: apply the maze to the grid, also keep the state from changing until the maze has applied
+  }
 }
