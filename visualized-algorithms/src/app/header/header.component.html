@@ -1,71 +1,77 @@
-<mat-toolbar color="primary">
+<mat-toolbar>
   <div>
-    <span style="color:lightseagreen">Visualized Algorithms</span>
+    <span class="title">Visualized Algorithms</span>
   </div>
 
-  <div class="header-button">
+  <div>
     <mat-menu #appMenuAlgorithms="matMenu">
       <button *ngFor="let algorithm of algorithms"
+              (click)="onAlgorithmChosen(algorithm)"
               mat-menu-item>{{ algorithm }}</button>
     </mat-menu>
 
     <button
+      class="header-button"
       mat-raised-button
-      color="accent"
       [matMenuTriggerFor]="appMenuAlgorithms">Algorithms
       <mat-icon>expand_more</mat-icon>
     </button>
   </div>
 
-  <div class="header-button">
+  <div>
     <mat-menu #appMenuMazes="matMenu">
       <button *ngFor="let maze of mazes"
+              (click)="onMazeChosen(maze)"
               mat-menu-item>{{ maze }}</button>
     </mat-menu>
 
     <button
+      class="header-button"
       mat-raised-button
-      color="accent"
       [matMenuTriggerFor]="appMenuMazes">Mazes & Patterns
       <mat-icon>expand_more</mat-icon>
     </button>
   </div>
 
-  <div class="header-button">
+  <div>
     <button mat-raised-button
-            color="accent">Remove Bomb</button>
+            class="header-button">Remove Bomb</button>
   </div>
 
-  <div class="header-button">
+  <div>
     <button mat-raised-button
-            color="warn">Visualize {{ currentAlgorithm }}!</button>
+            class="header-action-button"
+            (click)="onClickVisualize()"
+            [ngClass]="{'header-action-button-toggled' : algorithmButtonToggle, 'header-action-button-not-toggled' : !algorithmButtonToggle}"
+            >Visualize {{ currentAlgorithm }}!</button>
   </div>
 
-  <div class="header-button">
+  <div>
     <button mat-raised-button
-            color="accent">Clear Board</button>
+            class="header-button">Clear Board</button>
   </div>
 
-  <div class="header-button">
+  <div>
     <button mat-raised-button
-            color="accent">Clear Walls and Weights</button>
+            class="header-button">Clear Walls and Weights</button>
   </div>
 
-  <div class="header-button">
+  <div>
     <button mat-raised-button
-            color="accent">Clear Path</button>
+            class="header-button">Clear Path</button>
   </div>
 
-  <div class="header-button">
+  <div>
     <mat-menu #appMenuSpeed="matMenu">
+      // mat-icon speed for reference
       <button *ngFor="let speed of speeds"
               mat-menu-item
               (click)="onSpeedChosen(speed)">{{ speed }}</button>
     </mat-menu>
 
     <button
+      class="header-button"
       mat-raised-button
-      color="accent"
       [matMenuTriggerFor]="appMenuSpeed">Speed: {{ currentSpeed }}
       <mat-icon>expand_more</mat-icon>
     </button>

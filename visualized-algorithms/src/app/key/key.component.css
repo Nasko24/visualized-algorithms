@@ -1,0 +1,18 @@
+mat-icon {
+  position: center;
+  margin-left: 38px;
+}
+
+.description {
+  margin-left: 10px;
+  position: center;
+  font-size: large;
+}
+
+div {
+  margin-left: 38px;
+  width:21px;
+  height:21px;
+  background-color:#F5F2F2;
+  border: 1px solid black;
+}

@@ -5,4 +5,26 @@ span {
 .header-button {
   margin-left: 10px;
   margin-right: 10px;
+  background-color: cadetblue;
+}
+
+.header-action-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.header-action-button-toggled {
+  background-color: red;
+}
+
+.header-action-button-not-toggled {
+  background-color: lightgreen;
+}
+
+mat-toolbar {
+  background-color: darkslategray;
+}
+
+.title {
+  color: white;
 }
