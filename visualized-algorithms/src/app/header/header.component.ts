@@ -13,6 +13,7 @@ export class HeaderComponent implements OnInit {
   private speeds: string[];
   private currentAlgorithm: string;
   private currentSpeed: string;
+  private algorithmButtonToggle: boolean;
 
   // @ViewChild(MatMenuTrigger, {static: false} ) trigger: MatMenuTrigger;
 
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.algorithms = algorithms;
     this.currentAlgorithm = this.algorithms[0];
+    this.algorithmButtonToggle = false;
 
     this.mazes = mazes;
 
@@ -38,5 +40,10 @@ export class HeaderComponent implements OnInit {
 
   onMazeChosen(maze: string) {
     // TODO: apply the maze to the grid, also keep the state from changing until the maze has applied
+  }
+
+  onClickVisualize() {
+    this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
+    // TODO: this will launch the visualize state
   }
 }

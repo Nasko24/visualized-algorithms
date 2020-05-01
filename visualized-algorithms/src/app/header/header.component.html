@@ -40,7 +40,10 @@
 
   <div>
     <button mat-raised-button
-            class="header-action-button">Visualize {{ currentAlgorithm }}!</button>
+            class="header-action-button"
+            (click)="onClickVisualize()"
+            [ngClass]="{'header-action-button-toggled' : algorithmButtonToggle, 'header-action-button-not-toggled' : !algorithmButtonToggle}"
+            >Visualize {{ currentAlgorithm }}!</button>
   </div>
 
   <div>
@@ -60,6 +63,7 @@
 
   <div>
     <mat-menu #appMenuSpeed="matMenu">
+      // mat-icon speed for reference
       <button *ngFor="let speed of speeds"
               mat-menu-item
               (click)="onSpeedChosen(speed)">{{ speed }}</button>
