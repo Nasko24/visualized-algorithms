@@ -1,0 +1,25 @@
+mat-grid-list {
+  height: 82%;
+  width: 99%;
+  margin-left: 8px;
+}
+
+mat-grid-tile {
+  background-color: lightgray;
+}
+
+.tile-visited-cyan {
+  background-color: cyan;
+}
+
+.tile-visited-purple {
+  background-color: mediumpurple;
+}
+
+.tile-path {
+  background-color: orangered;
+}
+
+.tile-wall {
+  background-color: #03213c;
+}
