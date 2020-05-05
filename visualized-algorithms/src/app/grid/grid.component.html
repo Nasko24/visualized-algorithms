@@ -1,4 +1,9 @@
-<mat-grid-list cols="64" rowHeight="fit" role="grid">
-  <mat-grid-tile *ngFor="let cell of gridCells; let i = index;"
-  role="button"></mat-grid-tile>
-</mat-grid-list>
+<!--<mat-grid-list cols="64" rowHeight="fit" role="grid">-->
+<!--  <mat-grid-tile *ngFor="let cell of gridCells; let i = index;"-->
+<!--  role="button"></mat-grid-tile>-->
+<!--</mat-grid-list>-->
+
+<div class="flex-container">
+  <app-grid-tile class="tile"
+                 *ngFor="let cell of gridCells; let i = index;"></app-grid-tile>
+</div>

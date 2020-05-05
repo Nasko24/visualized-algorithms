@@ -12,6 +12,6 @@ export class GridComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.gridCells = Array(1536);
+    this.gridCells = Array(1488);
   }
 }

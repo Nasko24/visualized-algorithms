@@ -1,25 +1,25 @@
-mat-grid-list {
-  height: 82%;
-  width: 99%;
-  margin-left: 8px;
+.flex-container {
+
+  position: absolute;
+  top: 180px;
+  left: 0;
+  right: 0;
+  botton: 0;
+  margin: auto;
+
+  width: 1551px;
+  height: 601px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: lightskyblue;
 }
 
-mat-grid-tile {
-  background-color: lightgray;
-}
-
-.tile-visited-cyan {
-  background-color: cyan;
-}
-
-.tile-visited-purple {
-  background-color: mediumpurple;
-}
-
-.tile-path {
-  background-color: orangered;
-}
-
-.tile-wall {
-  background-color: #03213c;
+.flex-container > .tile {
+  background-color: white;
+  width: 24px;
+  height: 24px;
+  margin: 0.5px;
+  text-align: center;
+  font-size: 5px;
 }

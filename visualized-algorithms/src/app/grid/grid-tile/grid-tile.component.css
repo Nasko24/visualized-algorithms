@@ -1,0 +1,15 @@
+.tile-visited-cyan {
+  background-color: cyan;
+}
+
+.tile-visited-purple {
+  background-color: mediumpurple;
+}
+
+.tile-path {
+  background-color: orangered;
+}
+
+.tile-wall {
+  background-color: #03213c;
+}
