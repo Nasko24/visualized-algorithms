@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridService } from './grid.service';
 
 @Component({
   selector: 'app-grid',
@@ -9,9 +10,9 @@ export class GridComponent implements OnInit {
 
   private gridCells: number[];
 
-  constructor() { }
+  constructor(public gridService: GridService) { }
 
   ngOnInit() {
-    this.gridCells = Array(1488);
+    this.gridCells = Array(this.gridService.getGridCellCount());
   }
 }

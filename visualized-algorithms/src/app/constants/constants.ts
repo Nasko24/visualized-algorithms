@@ -15,3 +15,5 @@ export const speeds = [
   'Super Fast',
   'Ultra Fast'
 ];
+
+export const gridIndices = [];

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-grid-tile',
@@ -6,10 +6,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./grid-tile.component.css']
 })
 export class GridTileComponent implements OnInit {
+  @Input() location: number;
+
+  private gridLocation: number[];
 
   constructor() { }
 
   ngOnInit() {
+    this.calculateGridLocation();
+  }
+
+  calculateGridLocation() {
+    const xCoordinate = this.location % 62;
+    const yCoordinate = Math.floor(this.location / 62);
+    this.gridLocation = [xCoordinate, yCoordinate];
   }
 
 }

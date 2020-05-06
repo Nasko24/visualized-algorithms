@@ -5,5 +5,6 @@
 
 <div class="flex-container">
   <app-grid-tile class="tile"
-                 *ngFor="let cell of gridCells; let i = index;"></app-grid-tile>
+                 *ngFor="let cell of gridCells; let i = index;"
+                 [location]="i"></app-grid-tile>
 </div>
