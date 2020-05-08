@@ -1,29 +1,25 @@
 .tile-visited-cyan {
-  height: inherit;
-  width: inherit;
   background-color: cyan;
 }
 
 .tile-visited-purple {
-  height: inherit;
-  width: inherit;
   background-color: mediumpurple;
 }
 
 .tile-path {
-  height: inherit;
-  width: inherit;
   background-color: orangered;
 }
 
 .tile-wall {
-  height: inherit;
-  width: inherit;
   background-color: #03213c;
 }
 
 .tile-normal {
-  height: inherit;
-  width: inherit;
   background-color: white;
+}
+
+button {
+  border: none;
+  width: inherit;
+  height: inherit;
 }

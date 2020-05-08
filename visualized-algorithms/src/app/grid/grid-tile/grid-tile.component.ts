@@ -10,19 +10,13 @@ export class GridTileComponent implements OnInit {
   @Input() location: number;
 
   private gridLocation: number[];
-  private tileStates = [
-    [tileStateNormal, true],
-    [tileStateVisited, false],
-    [tileStateRevisited, false],
-    [tileStateWall, false],
-    [tileStatePath, false],
-  ];
+  private currentTileState;
 
   constructor() { }
 
   ngOnInit() {
+    this.setCurrentTileState(tileStateNormal);
     this.calculateGridLocation();
-    this.resetAllOtherTileStates(tileStateVisited);
   }
 
   calculateGridLocation() {
@@ -32,16 +26,58 @@ export class GridTileComponent implements OnInit {
   }
 
   toggleTileWall() {
-    this.resetAllOtherTileStates(tileStateWall);
+    if (this.getCurrentTileState() === tileStateWall) {
+      this.setCurrentTileState(tileStateNormal);
+    } else {
+      this.setCurrentTileState(tileStateWall);
+    }
   }
 
-  resetAllOtherTileStates(tileState: string) {
-    for (let i = 0; i < tileState.length; i++) {
-      if (this.tileStates[i][0] === tileState) {
-        this.tileStates[i][1] = true;
-      } else {
-        this.tileStates[i][1] = false;
-      }
+  setCurrentTileState(tileState: string) {
+    this.currentTileState = tileState;
+  }
+
+  getCurrentTileState(): string {
+    return this.currentTileState;
+  }
+
+  ifTileStateNormal(): boolean {
+    if (this.getCurrentTileState() === tileStateNormal) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ifTileStateVisited(): boolean {
+    if (this.getCurrentTileState() === tileStateVisited) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ifTileStateRevisited(): boolean {
+    if (this.getCurrentTileState() === tileStateRevisited) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ifTileStateWall(): boolean {
+    if (this.getCurrentTileState() === tileStateWall) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ifTileStatePath(): boolean {
+    if (this.getCurrentTileState() === tileStatePath) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -1,5 +1,8 @@
-<button style="border: none"
-        [ngClass]="{'tile-normal' : normal,
-                    'tile-wall' : wall,
-                    'tile-visited-cyan' : visited}"
-        (click)="toggleTileWall()"></button>
+<button [ngClass]="{'tile-normal' : this.ifTileStateNormal(),
+                    'tile-wall' : this.ifTileStateWall(),
+                    'tile-visited-cyan' : this.ifTileStateVisited(),
+                    'tile-visited-purple' : this.ifTileStateRevisited(),
+                    'tile-path' : this.ifTileStatePath()}"
+          (click)="toggleTileWall()">
+</button>
+
