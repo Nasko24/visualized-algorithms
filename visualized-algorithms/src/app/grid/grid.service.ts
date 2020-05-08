@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import { gridIndices } from '../constants/constants';
 
 @Injectable({ providedIn: 'root' })
 export class GridService {

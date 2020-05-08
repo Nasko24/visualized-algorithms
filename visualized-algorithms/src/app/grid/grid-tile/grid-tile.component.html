@@ -1,1 +1,5 @@
-<p>{{ gridLocation }}</p>
+<button style="border: none"
+        [ngClass]="{'tile-normal' : normal,
+                    'tile-wall' : wall,
+                    'tile-visited-cyan' : visited}"
+        (click)="toggleTileWall()"></button>

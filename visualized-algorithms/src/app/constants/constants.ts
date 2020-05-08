@@ -16,4 +16,8 @@ export const speeds = [
   'Ultra Fast'
 ];
 
-export const gridIndices = [];
+export const tileStateNormal = 'normal';
+export const tileStateVisited = 'visited';
+export const tileStateRevisited = 'revisited';
+export const tileStateWall = 'wall';
+export const tileStatePath = 'path';
