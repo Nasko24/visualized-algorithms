@@ -3,9 +3,11 @@ export const algorithms = [
   'Algorithm 2'
 ];
 
+export const maze1 = 'Maze 1';
+export const maze2 = 'Maze 2';
 export const mazes = [
-  'Maze 1',
-  'Maze 2'
+  maze1,
+  maze2
 ];
 
 export const speeds = [
@@ -21,3 +23,7 @@ export const tileStateVisited = 'visited';
 export const tileStateRevisited = 'revisited';
 export const tileStateWall = 'wall';
 export const tileStatePath = 'path';
+
+export const gridXSize = 62;
+export const gridYSize = 24;
+export const gridSize = gridXSize * gridYSize;

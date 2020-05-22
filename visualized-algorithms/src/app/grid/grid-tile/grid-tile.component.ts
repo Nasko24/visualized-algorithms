@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {tileStateNormal, tileStatePath, tileStateRevisited, tileStateVisited, tileStateWall} from '../../constants/constants';
+import {tileStateNormal, tileStatePath, tileStateRevisited,
+  tileStateVisited, tileStateWall, gridYSize} from '../../constants/constants';
+import {GridService} from '../grid.service';
 
 @Component({
   selector: 'app-grid-tile',
@@ -12,20 +14,25 @@ export class GridTileComponent implements OnInit {
   private gridLocation: number[];
   private currentTileState;
 
-  constructor() { }
+  constructor(public gridService: GridService) { }
 
   ngOnInit() {
     this.setCurrentTileState(tileStateNormal);
     this.calculateGridLocation();
   }
 
-  calculateGridLocation() {
+  private calculateGridLocation() {
     const xCoordinate = this.location % 62;
-    const yCoordinate = Math.floor(this.location / 62);
+    const yCoordinate = this.flipY(Math.floor(this.location / 62));
+
     this.gridLocation = [xCoordinate, yCoordinate];
   }
 
-  toggleTileWall() {
+  private flipY(yCoordinate: number): number {
+    return (gridYSize - 1) - yCoordinate;
+  }
+
+  private toggleTileWall() {
     if (this.getCurrentTileState() === tileStateWall) {
       this.setCurrentTileState(tileStateNormal);
     } else {
@@ -33,15 +40,15 @@ export class GridTileComponent implements OnInit {
     }
   }
 
-  setCurrentTileState(tileState: string) {
+  private setCurrentTileState(tileState: string) {
     this.currentTileState = tileState;
   }
 
-  getCurrentTileState(): string {
+  private getCurrentTileState(): string {
     return this.currentTileState;
   }
 
-  ifTileStateNormal(): boolean {
+  private ifTileStateNormal(): boolean {
     if (this.getCurrentTileState() === tileStateNormal) {
       return true;
     } else {
@@ -49,7 +56,7 @@ export class GridTileComponent implements OnInit {
     }
   }
 
-  ifTileStateVisited(): boolean {
+  private ifTileStateVisited(): boolean {
     if (this.getCurrentTileState() === tileStateVisited) {
       return true;
     } else {
@@ -57,7 +64,7 @@ export class GridTileComponent implements OnInit {
     }
   }
 
-  ifTileStateRevisited(): boolean {
+  private ifTileStateRevisited(): boolean {
     if (this.getCurrentTileState() === tileStateRevisited) {
       return true;
     } else {
@@ -65,7 +72,7 @@ export class GridTileComponent implements OnInit {
     }
   }
 
-  ifTileStateWall(): boolean {
+  private ifTileStateWall(): boolean {
     if (this.getCurrentTileState() === tileStateWall) {
       return true;
     } else {
@@ -73,7 +80,7 @@ export class GridTileComponent implements OnInit {
     }
   }
 
-  ifTileStatePath(): boolean {
+  private ifTileStatePath(): boolean {
     if (this.getCurrentTileState() === tileStatePath) {
       return true;
     } else {
