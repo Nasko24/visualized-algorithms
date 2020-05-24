@@ -1,13 +1,30 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
+import {gridSize, Speed, speedFast, TileLocationAndState} from '../constants/constants';
+import {Subject} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GridService {
-  private grid: string[][];
-  private gridCellCount = 1488;
+  private gridCellCount = gridSize;
+  private stateChangeSource = new Subject<TileLocationAndState>();
+  private currentSpeed: Speed = speedFast;
+
+  stateChange$ = this.stateChangeSource.asObservable();
 
   constructor() { }
 
   getGridCellCount() {
     return this.gridCellCount;
+  }
+
+  emitStateChangeForLocation(data: TileLocationAndState) {
+    this.stateChangeSource.next(data);
+  }
+
+  setCurrentSpeed(speed: Speed) {
+    this.currentSpeed = speed;
+  }
+
+  getCurrentSpeed(): Speed {
+    return this.currentSpeed;
   }
 }
