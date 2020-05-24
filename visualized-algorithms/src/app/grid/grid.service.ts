@@ -1,10 +1,13 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {gridSize} from '../constants/constants';
+import {gridSize, StateChange} from '../constants/constants';
+import {Subject} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GridService {
   private gridCellCount = gridSize;
-  private stateChangeEvent: EventEmitter<number[]> = new EventEmitter();
+  private stateChangeSource = new Subject<StateChange>();
+
+  stateChange$ = this.stateChangeSource.asObservable();
 
   constructor() { }
 
@@ -12,11 +15,7 @@ export class GridService {
     return this.gridCellCount;
   }
 
-  private emitStateChangeForLocation(data: number[]) {
-    this.stateChangeEvent.emit(data);
-  }
-
-  getStateChangeEventEmitter(): EventEmitter<number[]> {
-    return this.stateChangeEvent;
+  emitStateChangeForLocation(data: StateChange) {
+    this.stateChangeSource.next(data);
   }
 }

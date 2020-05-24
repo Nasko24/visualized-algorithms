@@ -1,24 +1,49 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {tileStateNormal, tileStatePath, tileStateRevisited,
-  tileStateVisited, tileStateWall, gridYSize} from '../../constants/constants';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  tileStateNormal, tileStatePath, tileStateRevisited,
+  tileStateVisited, tileStateWall, gridYSize, StateChange
+} from '../../constants/constants';
 import {GridService} from '../grid.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-grid-tile',
   templateUrl: './grid-tile.component.html',
   styleUrls: ['./grid-tile.component.css']
 })
-export class GridTileComponent implements OnInit {
+export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
 
   private gridLocation: number[];
   private currentTileState;
+  subscription: Subscription;
 
-  constructor(public gridService: GridService) { }
+  constructor(public gridService: GridService) {
+    this.subscription = this.gridService.stateChange$.subscribe((data) => {
+      this.checkLocationAndState(data);
+    });
+  }
 
   ngOnInit() {
     this.setCurrentTileState(tileStateNormal);
     this.calculateGridLocation();
+  }
+
+  private checkLocationAndState(data: StateChange) {
+    if (this.arraysAreEqual(this.gridLocation, [data.coordinateX, data.coordinateY])) {
+      this.setCurrentTileState(data.tileState);
+    }
+  }
+
+  private arraysAreEqual(array1: number[], array2: number[])  {
+    if (array1 === array2) { return true; }
+    if (array1.length !== array2.length) { return false; }
+    if (array1 == null || array2 == null) { return false; }
+
+    for (let i = 0; i < array1.length; i++) {
+      if (array1[i] !== array2[i]) { return false; }
+    }
+    return true;
   }
 
   private calculateGridLocation() {
@@ -41,7 +66,11 @@ export class GridTileComponent implements OnInit {
   }
 
   private setCurrentTileState(tileState: string) {
-    this.currentTileState = tileState;
+    if (this.currentTileState === tileStateVisited && tileState === tileStateVisited) {
+      this.currentTileState = tileStateRevisited;
+    } else {
+      this.currentTileState = tileState;
+    }
   }
 
   private getCurrentTileState(): string {
@@ -86,5 +115,9 @@ export class GridTileComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

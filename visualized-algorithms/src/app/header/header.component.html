@@ -48,7 +48,8 @@
 
   <div>
     <button mat-raised-button
-            class="header-button">Clear Board</button>
+            class="header-button"
+            (click)="onClickBoardClear()">Clear Board</button>
   </div>
 
   <div>
@@ -66,13 +67,13 @@
       <!-- mat-icon speed for reference -->
       <button *ngFor="let speed of speeds"
               mat-menu-item
-              (click)="onSpeedChosen(speed)">{{ speed }}</button>
+              (click)="onSpeedChosen(speed)">{{ speed[0] }}</button>
     </mat-menu>
 
     <button
       class="header-button"
       mat-raised-button
-      [matMenuTriggerFor]="appMenuSpeed">Speed: {{ currentSpeed }}
+      [matMenuTriggerFor]="appMenuSpeed">Speed: {{ currentSpeed[0] }}
       <mat-icon>expand_more</mat-icon>
     </button>
   </div>
