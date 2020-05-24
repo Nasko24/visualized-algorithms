@@ -10,17 +10,21 @@ export const mazes = [
   maze2
 ];
 
-export const speedSlow = 250;
-export const speedAverage = 150;
-export const speedFast = 100;
-export const speedSuperFast = 50;
-export const speedUltraFast = 25;
+export interface Speed {
+  speed: string;
+  speedMS: number;
+}
+export const speedSlow: Speed = { speed: 'Slow', speedMS: 200 };
+export const speedAverage: Speed = { speed: 'Average', speedMS: 150 };
+export const speedFast: Speed = { speed: 'Fast', speedMS: 100 };
+export const speedSuperFast: Speed = { speed: 'SuperFast', speedMS: 50 };
+export const speedUltraFast: Speed = { speed: 'UltraFast', speedMS: 25 };
 export const speeds = [
-  ['Slow', speedSlow],
-  ['Average', speedAverage],
-  ['Fast', speedFast],
-  ['SuperFast', speedSuperFast],
-  ['UltraFast', speedUltraFast]
+  speedSlow,
+  speedAverage,
+  speedFast,
+  speedSuperFast,
+  speedUltraFast
 ];
 
 export const tileStateNormal = 'normal';
@@ -33,7 +37,7 @@ export const gridXSize = 62;
 export const gridYSize = 24;
 export const gridSize = gridXSize * gridYSize;
 
-export interface StateChange {
+export interface TileLocationAndState {
   coordinateX: number;
   coordinateY: number;
   tileState: string;

@@ -4,9 +4,9 @@ import {
   algorithms,
   gridXSize,
   gridYSize,
-  mazes,
+  mazes, Speed, speedFast,
   speeds,
-  StateChange,
+  TileLocationAndState,
   tileStateNormal,
   tileStateVisited
 } from '../constants/constants';
@@ -20,9 +20,8 @@ import {GridService} from '../grid/grid.service';
 export class HeaderComponent implements OnInit {
   private algorithms: string[];
   private mazes: string[];
-  private speeds: any[];
+  private speeds: Speed[];
   private currentAlgorithm: string;
-  private currentSpeed: any[];
   private algorithmButtonToggle: boolean;
 
   constructor(public gridService: GridService) { }
@@ -35,15 +34,10 @@ export class HeaderComponent implements OnInit {
     this.mazes = mazes;
 
     this.speeds = speeds;
-    this.currentSpeed = this.speeds[2];
   }
 
-  getCurrentSpeedMS(): number {
-    return this.currentSpeed[1];
-  }
-
-  onSpeedChosen(speed: any[]) {
-    this.currentSpeed = speed;
+  onSpeedChosen(speed: Speed) {
+    this.gridService.setCurrentSpeed(speed);
   }
 
   onAlgorithmChosen(algorithm: string) {
@@ -62,12 +56,12 @@ export class HeaderComponent implements OnInit {
     for (let i = 0; i < 200; i++) {
       const randomNumberX = this.randomNumber(0, 61);
       const randomNumberY = this.randomNumber(0, 23);
-      const stateData: StateChange = {
+      const stateData: TileLocationAndState = {
         coordinateX: randomNumberX,
         coordinateY: randomNumberY,
         tileState: tileStateVisited};
       this.gridService.emitStateChangeForLocation(stateData);
-      await this.sleep(this.getCurrentSpeedMS());
+      await this.sleep(this.gridService.getCurrentSpeed().speedMS);
     }
   }
 
@@ -82,7 +76,7 @@ export class HeaderComponent implements OnInit {
   onClickBoardClear() {
     for (let x = 0; x < gridXSize; x++) {
       for (let y = 0; y < gridYSize; y++) {
-        const stateData: StateChange = {
+        const stateData: TileLocationAndState = {
           coordinateX: x,
           coordinateY: y,
           tileState: tileStateNormal};

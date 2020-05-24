@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   tileStateNormal, tileStatePath, tileStateRevisited,
-  tileStateVisited, tileStateWall, gridYSize, StateChange
+  tileStateVisited, tileStateWall, gridYSize, TileLocationAndState
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
@@ -29,7 +29,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
     this.calculateGridLocation();
   }
 
-  private checkLocationAndState(data: StateChange) {
+  private checkLocationAndState(data: TileLocationAndState) {
     if (this.arraysAreEqual(this.gridLocation, [data.coordinateX, data.coordinateY])) {
       this.setCurrentTileState(data.tileState);
     }
