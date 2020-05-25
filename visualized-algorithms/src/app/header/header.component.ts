@@ -18,10 +18,11 @@ import {GridService} from '../grid/grid.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  private algorithms: string[];
+  private algorithms: Algorithm[];
+  private currentAlgorithm: Algorithm;
+
   private mazes: string[];
   private speeds: Speed[];
-  private currentAlgorithm: string;
   private algorithmButtonToggle: boolean;
 
   constructor(public gridService: GridService) { }
@@ -40,7 +41,7 @@ export class HeaderComponent implements OnInit {
     this.gridService.setCurrentSpeed(speed);
   }
 
-  onAlgorithmChosen(algorithm: string) {
+  onAlgorithmChosen(algorithm: Algorithm) {
     this.currentAlgorithm = algorithm;
   }
 
