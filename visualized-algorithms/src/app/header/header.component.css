@@ -11,6 +11,10 @@ span {
 .header-action-button {
   margin-left: 10px;
   margin-right: 10px;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .header-action-button-toggled {

@@ -7,7 +7,7 @@
     <mat-menu #appMenuAlgorithms="matMenu">
       <button *ngFor="let algorithm of algorithms"
               (click)="onAlgorithmChosen(algorithm)"
-              mat-menu-item>{{ algorithm }}</button>
+              mat-menu-item>{{ algorithm.name }}</button>
     </mat-menu>
 
     <button
@@ -43,7 +43,7 @@
             class="header-action-button"
             (click)="onClickVisualize()"
             [ngClass]="{'header-action-button-toggled' : algorithmButtonToggle, 'header-action-button-not-toggled' : !algorithmButtonToggle}"
-            >Visualize {{ currentAlgorithm }}!</button>
+            >Visualize {{ currentAlgorithm.name }}!</button>
   </div>
 
   <div>
