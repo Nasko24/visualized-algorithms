@@ -1,10 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   tileStateNormal, tileStatePath, tileStateRevisited,
-  tileStateVisited, tileStateWall, gridYSize, TileLocationAndState
+  tileStateVisited, tileStateWall, gridYSize
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
+import {TileLocationAndState} from '../../constants/interfaces';
 
 @Component({
   selector: 'app-grid-tile',

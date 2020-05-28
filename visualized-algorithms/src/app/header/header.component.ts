@@ -4,13 +4,13 @@ import {
   algorithms,
   gridXSize,
   gridYSize,
-  mazes, Speed, speedFast,
+  mazes,
   speeds,
-  TileLocationAndState,
   tileStateNormal,
   tileStateVisited
 } from '../constants/constants';
 import {GridService} from '../grid/grid.service';
+import {Speed, TileLocationAndState} from '../constants/interfaces';
 
 @Component({
   selector: 'app-header',

@@ -1,6 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {gridSize, Speed, speedFast, TileLocationAndState} from '../constants/constants';
+import {gridSize, speedFast} from '../constants/constants';
 import {Subject} from 'rxjs';
+import {Speed, TileLocationAndState} from '../constants/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class GridService {
