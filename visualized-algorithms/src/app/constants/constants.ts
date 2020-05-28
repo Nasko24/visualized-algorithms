@@ -50,3 +50,13 @@ export const tileStatePath = 'path';
 export const gridXSize = 62;
 export const gridYSize = 24;
 export const gridSize = gridXSize * gridYSize;
+
+export const defaultStartNode = {
+  coordinateX: 13,
+  coordinateY: 12
+};
+
+export const defaultEndNode = {
+  coordinateX: 48,
+  coordinateY: 12
+};

@@ -75,14 +75,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onClickBoardClear() {
-    for (let x = 0; x < gridXSize; x++) {
-      for (let y = 0; y < gridYSize; y++) {
-        const stateData: TileLocationAndState = {
-          coordinateX: x,
-          coordinateY: y,
-          tileState: tileStateNormal};
-        this.gridService.emitStateChangeForLocation(stateData);
-      }
-    }
+    this.gridService.clearGrid();
   }
 }

@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   tileStateNormal, tileStatePath, tileStateRevisited,
-  tileStateVisited, tileStateWall, gridYSize
+  tileStateVisited, tileStateWall, gridYSize, defaultStartNode, defaultEndNode
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
@@ -14,7 +14,9 @@ import {TileLocationAndState} from '../../constants/interfaces';
 })
 export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
+  tileIsNode: boolean;
 
+  private tileWeight: number;
   private gridLocation: number[];
   private currentTileState;
   subscription: Subscription;
@@ -26,8 +28,12 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.tileWeight = 1;
+    this.tileIsNode = false;
+
     this.setCurrentTileState(tileStateNormal);
     this.calculateGridLocation();
+    this.applyDefaultLocationAndState();
   }
 
   private checkLocationAndState(data: TileLocationAndState) {
@@ -67,6 +73,9 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private setCurrentTileState(tileState: string) {
+    if (this.tileIsNode) {
+      return;
+    }
     if (this.currentTileState === tileStateVisited && tileState === tileStateVisited) {
       this.currentTileState = tileStateRevisited;
     } else {
@@ -120,5 +129,14 @@ export class GridTileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  private applyDefaultLocationAndState() {
+    if (this.arraysAreEqual(this.gridLocation, [defaultStartNode.coordinateX, defaultStartNode.coordinateY]) ||
+        this.arraysAreEqual(this.gridLocation, [defaultEndNode.coordinateX, defaultEndNode.coordinateY])) {
+      // TODO: apply the start and end node icons to the tile
+      this.setCurrentTileState(tileStateWall);
+      this.tileIsNode = true;
+    }
   }
 }
