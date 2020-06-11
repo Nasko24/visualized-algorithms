@@ -1,10 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   tileStateNormal, tileStatePath, tileStateRevisited,
-  tileStateVisited, tileStateWall, gridYSize, TileLocationAndState
+  tileStateVisited, tileStateWall, gridYSize, defaultStartNode, defaultEndNode
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
+import {TileLocationAndState} from '../../constants/interfaces';
 
 @Component({
   selector: 'app-grid-tile',
@@ -13,7 +14,9 @@ import {Subscription} from 'rxjs';
 })
 export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
+  tileIsNode: boolean;
 
+  private tileWeight: number;
   private gridLocation: number[];
   private currentTileState;
   subscription: Subscription;
@@ -25,8 +28,12 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.tileWeight = 1;
+    this.tileIsNode = false;
+
     this.setCurrentTileState(tileStateNormal);
     this.calculateGridLocation();
+    this.applyDefaultLocationAndState();
   }
 
   private checkLocationAndState(data: TileLocationAndState) {
@@ -66,6 +73,9 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private setCurrentTileState(tileState: string) {
+    if (this.tileIsNode) {
+      return;
+    }
     if (this.currentTileState === tileStateVisited && tileState === tileStateVisited) {
       this.currentTileState = tileStateRevisited;
     } else {
@@ -119,5 +129,15 @@ export class GridTileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  private applyDefaultLocationAndState() {
+    if (this.arraysAreEqual(this.gridLocation, defaultStartNode) ||
+        this.arraysAreEqual(this.gridLocation, defaultEndNode)) {
+      // TODO: apply the start and end node icons to the tile
+      // current solution is temporary
+      this.setCurrentTileState(tileStateWall);
+      this.tileIsNode = true;
+    }
   }
 }

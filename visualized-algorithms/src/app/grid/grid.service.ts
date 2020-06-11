@@ -1,6 +1,7 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {gridSize, Speed, speedFast, TileLocationAndState} from '../constants/constants';
+import {Injectable} from '@angular/core';
+import {gridSize, gridXSize, gridYSize, speedFast, tileStateNormal, tileStateVisited} from '../constants/constants';
 import {Subject} from 'rxjs';
+import {Speed, TileLocationAndState} from '../constants/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class GridService {
@@ -26,5 +27,17 @@ export class GridService {
 
   getCurrentSpeed(): Speed {
     return this.currentSpeed;
+  }
+
+  clearGrid() {
+    for (let x = 0; x < gridXSize; x++) {
+      for (let y = 0; y < gridYSize; y++) {
+        const stateData: TileLocationAndState = {
+          coordinateX: x,
+          coordinateY: y,
+          tileState: tileStateNormal};
+        this.emitStateChangeForLocation(stateData);
+      }
+    }
   }
 }

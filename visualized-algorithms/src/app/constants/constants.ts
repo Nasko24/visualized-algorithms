@@ -1,6 +1,5 @@
-export interface Algorithm {
-  name: string;
-}
+import {Speed, Algorithm} from './interfaces';
+
 export const dijkstrasAlgorithm: Algorithm = { name: 'Dijkstra\'s Algorithm' };
 export const aStarAlgorithm: Algorithm = { name: 'A* Search' };
 export const dStarAlgorithm: Algorithm = { name: 'D* Search' };
@@ -29,10 +28,6 @@ export const mazes = [
   maze2
 ];
 
-export interface Speed {
-  speed: string;
-  speedMS: number;
-}
 export const speedSlow: Speed = { speed: 'Slow', speedMS: 200 };
 export const speedAverage: Speed = { speed: 'Average', speedMS: 150 };
 export const speedFast: Speed = { speed: 'Fast', speedMS: 100 };
@@ -56,8 +51,6 @@ export const gridXSize = 62;
 export const gridYSize = 24;
 export const gridSize = gridXSize * gridYSize;
 
-export interface TileLocationAndState {
-  coordinateX: number;
-  coordinateY: number;
-  tileState: string;
-}
+export const defaultStartNode = [13, 12];
+
+export const defaultEndNode = [48, 12];

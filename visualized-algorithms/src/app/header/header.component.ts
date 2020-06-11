@@ -4,13 +4,13 @@ import {
   algorithms,
   gridXSize,
   gridYSize,
-  mazes, Speed, speedFast,
+  mazes,
   speeds,
-  TileLocationAndState,
   tileStateNormal,
   tileStateVisited
 } from '../constants/constants';
 import {GridService} from '../grid/grid.service';
+import {Speed, TileLocationAndState} from '../constants/interfaces';
 
 @Component({
   selector: 'app-header',
@@ -52,6 +52,8 @@ export class HeaderComponent implements OnInit {
   async onClickVisualize() {
     this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
     // TODO: this will launch the visualize state
+    // call algorithms service and pass a state of the grid to it
+    // defining the tiles that cannot be visited (wall tiles)
 
     // test code here, this is not going to be final
     for (let i = 0; i < 200; i++) {
@@ -75,14 +77,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onClickBoardClear() {
-    for (let x = 0; x < gridXSize; x++) {
-      for (let y = 0; y < gridYSize; y++) {
-        const stateData: TileLocationAndState = {
-          coordinateX: x,
-          coordinateY: y,
-          tileState: tileStateNormal};
-        this.gridService.emitStateChangeForLocation(stateData);
-      }
-    }
+    this.gridService.clearGrid();
   }
 }
