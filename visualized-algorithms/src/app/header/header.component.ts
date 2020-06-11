@@ -52,6 +52,8 @@ export class HeaderComponent implements OnInit {
   async onClickVisualize() {
     this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
     // TODO: this will launch the visualize state
+    // call algorithms service and pass a state of the grid to it
+    // defining the tiles that cannot be visited (wall tiles)
 
     // test code here, this is not going to be final
     for (let i = 0; i < 200; i++) {

@@ -1,4 +1,4 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {gridSize, gridXSize, gridYSize, speedFast, tileStateNormal, tileStateVisited} from '../constants/constants';
 import {Subject} from 'rxjs';
 import {Speed, TileLocationAndState} from '../constants/interfaces';

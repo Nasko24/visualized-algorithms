@@ -132,9 +132,10 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private applyDefaultLocationAndState() {
-    if (this.arraysAreEqual(this.gridLocation, [defaultStartNode.coordinateX, defaultStartNode.coordinateY]) ||
-        this.arraysAreEqual(this.gridLocation, [defaultEndNode.coordinateX, defaultEndNode.coordinateY])) {
+    if (this.arraysAreEqual(this.gridLocation, defaultStartNode) ||
+        this.arraysAreEqual(this.gridLocation, defaultEndNode)) {
       // TODO: apply the start and end node icons to the tile
+      // current solution is temporary
       this.setCurrentTileState(tileStateWall);
       this.tileIsNode = true;
     }
