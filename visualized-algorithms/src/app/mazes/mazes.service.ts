@@ -1,6 +1,27 @@
 import {Injectable} from '@angular/core';
+import {Maze} from '../constants/interfaces';
+import {mazes} from '../constants/constants';
+import {RecursiveBacktrackerMaze} from './recursive-backtracker.maze';
+import Stack from 'ts-data.stack';
+import {GridService} from '../grid/grid.service';
 
 @Injectable({ providedIn: 'root' })
 export class MazesService {
-  constructor() { }
+  private gridStack: Stack<number[]>;
+
+  constructor(public gridService: GridService) { }
+
+  applyMaze(maze: Maze) {
+    switch (maze.name) {
+      case mazes[0].name: {
+        console.log('Executing maze ' + maze.name);
+        const mazeObj = new RecursiveBacktrackerMaze(this.gridService.getStartNodeLocation(),
+          this.gridService.getEndNodeLocation(), [0, 0]);
+        this.gridStack = mazeObj.generateMaze();
+        break;
+      }
+      default:
+        console.log('Unable to find a maze');
+    }
+  }
 }

@@ -22,7 +22,7 @@
     <mat-menu #appMenuMazes="matMenu">
       <button *ngFor="let maze of mazes"
               (click)="onMazeChosen(maze)"
-              mat-menu-item>{{ maze }}</button>
+              mat-menu-item>{{ maze.name }}</button>
     </mat-menu>
 
     <button

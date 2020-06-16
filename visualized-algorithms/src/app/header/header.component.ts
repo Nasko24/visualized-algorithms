@@ -10,7 +10,9 @@ import {
   tileStateVisited
 } from '../constants/constants';
 import {GridService} from '../grid/grid.service';
-import {Speed, TileLocationAndState} from '../constants/interfaces';
+import {Maze, Speed, TileLocationAndState} from '../constants/interfaces';
+import {MazesService} from '../mazes/mazes.service';
+import {AlgorithmsService} from '../algorithms/algorithms.service';
 
 @Component({
   selector: 'app-header',
@@ -21,11 +23,13 @@ export class HeaderComponent implements OnInit {
   private algorithms: Algorithm[];
   private currentAlgorithm: Algorithm;
 
-  private mazes: string[];
+  private mazes: Maze[];
   private speeds: Speed[];
   private algorithmButtonToggle: boolean;
 
-  constructor(public gridService: GridService) { }
+  constructor(public gridService: GridService,
+              public mazesService: MazesService,
+              public algorithmsService: AlgorithmsService) { }
 
   ngOnInit() {
     this.algorithms = algorithms;
@@ -45,11 +49,11 @@ export class HeaderComponent implements OnInit {
     this.currentAlgorithm = algorithm;
   }
 
-  onMazeChosen(maze: string) {
-    // TODO: apply the maze to the grid, also keep the state from changing until the maze has applied
+  onMazeChosen(maze: Maze) {
+    this.mazesService.applyMaze(maze);
   }
 
-  async onClickVisualize() {
+  onClickVisualize() {
     this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
     // TODO: this will launch the visualize state
     // call algorithms service and pass a state of the grid to it
@@ -63,17 +67,13 @@ export class HeaderComponent implements OnInit {
         coordinateX: randomNumberX,
         coordinateY: randomNumberY,
         tileState: tileStateVisited};
-      this.gridService.emitStateChangeForLocation(stateData);
-      await this.sleep(this.gridService.getCurrentSpeed().speedMS);
+      this.gridService.pushStateData(stateData);
     }
+    this.gridService.applyStack();
   }
 
   randomNumber(min: number, max: number): number {
     return Math.round(Math.random() * (max - min) + min);
-  }
-
-  sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   onClickBoardClear() {
