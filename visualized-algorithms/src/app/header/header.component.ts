@@ -59,7 +59,7 @@ export class HeaderComponent implements OnInit {
     // call algorithms service and pass a state of the grid to it
     // defining the tiles that cannot be visited (wall tiles)
 
-    // test code here, this is not going to be final
+    // TEST CODE
     for (let i = 0; i < 200; i++) {
       const randomNumberX = this.randomNumber(0, 61);
       const randomNumberY = this.randomNumber(0, 23);
@@ -69,7 +69,8 @@ export class HeaderComponent implements OnInit {
         tileState: tileStateVisited};
       this.gridService.pushStateData(stateData);
     }
-    this.gridService.applyStack();
+    this.gridService.applyStackAlgorithm();
+    // END TEST CODE
   }
 
   randomNumber(min: number, max: number): number {

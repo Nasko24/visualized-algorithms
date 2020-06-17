@@ -19,12 +19,12 @@ export class GridService {
   private gridCellCount = gridSize;
   private stateChangeSource = new Subject<TileLocationAndState>();
   private currentSpeed: Speed = speedFast;
-  private testStack: Stack<TileLocationAndState>;
+  private tileStack: Stack<TileLocationAndState>;
 
   stateChange$ = this.stateChangeSource.asObservable();
 
   constructor() {
-    this.testStack = new Stack<TileLocationAndState>();
+    this.tileStack = new Stack<TileLocationAndState>();
   }
 
   getGridCellCount() {
@@ -70,16 +70,25 @@ export class GridService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async applyStack() {
+  async applyStackAlgorithm() {
     // tslint:disable-next-line:no-shadowed-variable
-    const count = this.testStack.count();
+    const count = this.tileStack.count();
     for (let i = 0; i < count; i++) {
-      this.emitStateChangeForLocation(this.testStack.pop());
+      this.emitStateChangeForLocation(this.tileStack.pop());
       await this.sleep(this.getCurrentSpeed().speedMS);
     }
   }
 
+  async applyStackMaze() {
+    // tslint:disable-next-line:no-shadowed-variable
+    const count = this.tileStack.count();
+    for (let i = 0; i < count; i++) {
+      this.emitStateChangeForLocation(this.tileStack.pop());
+      await this.sleep(10);
+    }
+  }
+
   pushStateData(stateData: TileLocationAndState) {
-    this.testStack.push(stateData);
+    this.tileStack.push(stateData);
   }
 }
