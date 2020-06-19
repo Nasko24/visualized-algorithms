@@ -50,5 +50,4 @@ export const gridYSize = 24;
 export const gridSize = gridXSize * gridYSize;
 
 export const defaultStartNode = [13, 12];
-
 export const defaultEndNode = [48, 12];

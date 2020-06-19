@@ -2,11 +2,8 @@ import {Component, OnInit} from '@angular/core';
 
 import {
   algorithms,
-  gridXSize,
-  gridYSize,
   mazes,
   speeds,
-  tileStateNormal,
   tileStateVisited
 } from '../constants/constants';
 import {GridService} from '../grid/grid.service';
