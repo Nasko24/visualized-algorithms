@@ -96,8 +96,8 @@ export class GridService {
     this.tileStack.push(stateData);
   }
 
-  public createCoordinateSet(x: number, y: number): CoordinateSet {
-    const set: CoordinateSet = {x, y};
+  public createCoordinateSet(x: number, y: number, override: boolean = false): CoordinateSet {
+    const set: CoordinateSet = {x, y, override};
     return set;
   }
 
@@ -160,5 +160,37 @@ export class GridService {
       this.createCoordinateSet(currentTile.x - 2, currentTile.y - 1),
       this.createCoordinateSet(currentTile.x - 1, currentTile.y - 1)
     ];
+  }
+
+  getTileAbove(tile: CoordinateSet): CoordinateSet {
+    return this.createCoordinateSet(tile.x, tile.y + 1);
+  }
+
+  getTileBelow(tile: CoordinateSet): CoordinateSet {
+    return this.createCoordinateSet(tile.x, tile.y - 1);
+  }
+
+  getTileRight(tile: CoordinateSet): CoordinateSet {
+    return this.createCoordinateSet(tile.x + 1, tile.y);
+  }
+
+  getTileLeft(tile: CoordinateSet): CoordinateSet {
+    return this.createCoordinateSet(tile.x - 1, tile.y);
+  }
+
+  getTileAboveWithOverride(tile: CoordinateSet) {
+    return this.createCoordinateSet(tile.x, tile.y + 1, true);
+  }
+
+  getTileBelowWithOverride(tile: CoordinateSet) {
+    return this.createCoordinateSet(tile.x, tile.y + 1, true);
+  }
+
+  getTileRightWithOverride(tile: CoordinateSet) {
+    return this.createCoordinateSet(tile.x, tile.y + 1, true);
+  }
+
+  getTileLeftWithOverride(tile: CoordinateSet) {
+    return this.createCoordinateSet(tile.x, tile.y + 1, true);
   }
 }

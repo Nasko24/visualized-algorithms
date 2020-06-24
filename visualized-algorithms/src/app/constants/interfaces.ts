@@ -21,4 +21,5 @@ export interface TileLocationAndState {
 export interface CoordinateSet {
   x: number;
   y: number;
+  override?: boolean;
 }
