@@ -113,7 +113,7 @@ export class RecursiveBacktrackerMaze {
 
   private neighborsNotVisited(neighbors: CoordinateSet[]): boolean {
     for (const neighbor of neighbors) {
-      if (neighbor.x < -1 || neighbor.x > gridXSize || neighbor.y < -1 || neighbor.y > gridYSize
+      if (neighbor.x < 0 || neighbor.x >= gridXSize || neighbor.y < 0 || neighbor.y >= gridYSize
         || this.gridService.existsInTileSetArray(neighbor, this.visitedTiles)) { return false; }
     }
     return true;

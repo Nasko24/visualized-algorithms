@@ -115,7 +115,7 @@ export class GridService {
   }
 
   createTileLocationAndStateObject(currentTile: CoordinateSet): TileLocationAndState {
-    return { coordinateX: currentTile.x, coordinateY: currentTile.y, tileState: tileStateWall};
+    return { coordinateX: currentTile.x, coordinateY: currentTile.y, tileState: tileStateNormal};
   }
 
   getUpperNeighbors(currentTile: CoordinateSet): CoordinateSet[] {
@@ -192,5 +192,17 @@ export class GridService {
 
   getTileLeftWithOverride(tile: CoordinateSet) {
     return this.createCoordinateSet(tile.x, tile.y + 1, true);
+  }
+
+  setGridToAllWalls() {
+    for (let x = 0; x < gridXSize; x++) {
+      for (let y = 0; y < gridYSize; y++) {
+        const stateData: TileLocationAndState = {
+          coordinateX: x,
+          coordinateY: y,
+          tileState: tileStateWall};
+        this.emitStateChangeForLocation(stateData);
+      }
+    }
   }
 }
