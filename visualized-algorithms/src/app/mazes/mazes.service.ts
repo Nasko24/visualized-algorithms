@@ -14,7 +14,7 @@ export class MazesService {
         console.log('Executing maze ' + maze.name);
         const mazeObj = new RecursiveBacktrackerMaze(this.gridService);
 
-        this.gridService.setGridStateData(mazeObj.generateMaze(this.gridService.createCoordinateSet(1, 1)));
+        this.gridService.setGridStateData(mazeObj.generateMaze(this.gridService.createCoordinateSet(0, 0)));
 
         this.gridService.applyStackMaze();
         break;
