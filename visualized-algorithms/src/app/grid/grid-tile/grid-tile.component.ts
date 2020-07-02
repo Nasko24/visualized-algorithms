@@ -136,7 +136,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
         this.arraysAreEqual(this.gridLocation, defaultEndNode)) {
       // TODO: apply the start and end node icons to the tile
       // current solution is temporary
-      this.setCurrentTileState(tileStateWall);
+      this.setCurrentTileState(tileStatePath);
       this.tileIsNode = true;
     }
   }

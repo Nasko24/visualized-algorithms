@@ -1,4 +1,4 @@
-import {Speed, Algorithm} from './interfaces';
+import {Speed, Algorithm, Maze} from './interfaces';
 
 export const dijkstrasAlgorithm: Algorithm = { name: 'Dijkstra\'s Algorithm' };
 export const aStarAlgorithm: Algorithm = { name: 'A* Search' };
@@ -21,11 +21,9 @@ export const algorithms: Algorithm[] = [
   biderectionalSwarmAlgorithm
 ];
 
-export const maze1 = 'Maze 1';
-export const maze2 = 'Maze 2';
-export const mazes = [
-  maze1,
-  maze2
+export const recursiveBacktracker: Maze = { name: 'Recursive Backtracker', startingLocation: [0, 0] };
+export const mazes: Maze[] = [
+  recursiveBacktracker
 ];
 
 export const speedSlow: Speed = { speed: 'Slow', speedMS: 200 };
@@ -52,5 +50,4 @@ export const gridYSize = 24;
 export const gridSize = gridXSize * gridYSize;
 
 export const defaultStartNode = [13, 12];
-
 export const defaultEndNode = [48, 12];
