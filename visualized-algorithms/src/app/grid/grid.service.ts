@@ -178,22 +178,6 @@ export class GridService {
     return this.createCoordinateSet(tile.x - 1, tile.y);
   }
 
-  getTileAboveWithOverride(tile: CoordinateSet) {
-    return this.createCoordinateSet(tile.x, tile.y + 1, true);
-  }
-
-  getTileBelowWithOverride(tile: CoordinateSet) {
-    return this.createCoordinateSet(tile.x, tile.y + 1, true);
-  }
-
-  getTileRightWithOverride(tile: CoordinateSet) {
-    return this.createCoordinateSet(tile.x, tile.y + 1, true);
-  }
-
-  getTileLeftWithOverride(tile: CoordinateSet) {
-    return this.createCoordinateSet(tile.x, tile.y + 1, true);
-  }
-
   setGridToAllWalls() {
     for (let x = 0; x < gridXSize; x++) {
       for (let y = 0; y < gridYSize; y++) {
