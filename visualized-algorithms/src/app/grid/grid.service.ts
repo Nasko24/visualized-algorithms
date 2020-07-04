@@ -51,6 +51,11 @@ export class GridService {
         this.emitStateChangeForLocation(stateData);
       }
     }
+    this.clearTileStack();
+  }
+
+  private clearTileStack() {
+    this.tileStack = [];
   }
 
   getStartNodeLocation(): CoordinateSet {
@@ -96,8 +101,8 @@ export class GridService {
     this.tileStack.push(stateData);
   }
 
-  public createCoordinateSet(x: number, y: number, override: boolean = false): CoordinateSet {
-    const set: CoordinateSet = {x, y, override};
+  public createCoordinateSet(x: number, y: number): CoordinateSet {
+    const set: CoordinateSet = {x, y};
     return set;
   }
 
