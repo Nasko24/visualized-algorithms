@@ -23,7 +23,7 @@ export class RecursiveBacktrackerMaze {
     this.movedLeft = false;
   }
 
-  generateMaze(startingTile: CoordinateSet): TileLocationAndState[] {
+  generateRecursiveBacktrackerMaze(startingTile: CoordinateSet): TileLocationAndState[] {
 
     // this.visitedTiles.push(this.gridService.createCoordinateSet(defaultStartNode[0], defaultStartNode[1]));
     // this.visitedTiles.push(this.gridService.createCoordinateSet(defaultEndNode[0], defaultEndNode[1]));

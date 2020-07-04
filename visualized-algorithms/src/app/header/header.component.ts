@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit {
   onAlgorithmChosen(algorithm: Algorithm) {
     // TODO: set all tiles with VISITED and REVISITED state to NORMAL
     this.currentAlgorithm = algorithm;
+    this.algorithmsService.applyAlgorithm(algorithm);
   }
 
   onMazeChosen(maze: Maze) {
