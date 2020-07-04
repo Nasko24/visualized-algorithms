@@ -73,7 +73,6 @@ export class GridService {
   }
 
   async applyStackAlgorithm() {
-    // tslint:disable-next-line:no-shadowed-variable
     const count = this.tileStack.length;
     for (let i = 0; i < count; i++) {
       this.emitStateChangeForLocation(this.tileStack.pop());
@@ -82,7 +81,6 @@ export class GridService {
   }
 
   async applyStackMaze() {
-    // tslint:disable-next-line:prefer-for-of
     for (const tile of this.tileStack) {
       this.emitStateChangeForLocation(tile);
       await this.sleep(25);
@@ -119,8 +117,8 @@ export class GridService {
     return false;
   }
 
-  createTileLocationAndStateObject(currentTile: CoordinateSet): TileLocationAndState {
-    return { coordinateX: currentTile.x, coordinateY: currentTile.y, tileState: tileStateNormal};
+  createTileLocationAndStateObject(currentTile: CoordinateSet, weight: number = 1): TileLocationAndState {
+    return { coordinateX: currentTile.x, coordinateY: currentTile.y, tileState: tileStateNormal, tileWeight: weight};
   }
 
   getUpperNeighbors(currentTile: CoordinateSet): CoordinateSet[] {

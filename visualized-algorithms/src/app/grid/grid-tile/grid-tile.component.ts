@@ -16,9 +16,9 @@ export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
   tileIsNode: boolean;
 
-  private tileWeight: number;
   private gridLocation: number[];
   private currentTileState;
+  private currentTileWeight;
   subscription: Subscription;
 
   constructor(public gridService: GridService) {
@@ -28,7 +28,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.tileWeight = 1;
+    this.currentTileWeight = 1;
     this.tileIsNode = false;
 
     this.setCurrentTileState(tileStateNormal);
@@ -87,7 +87,15 @@ export class GridTileComponent implements OnInit, OnDestroy {
     return this.currentTileState;
   }
 
-  private ifTileStateNormal(): boolean {
+  private setCurrentTileWeight(tileWeight: number) {
+
+  }
+
+  private getCurrentTileWeight(): number {
+    return this.currentTileWeight;
+  }
+
+  private isTileStateNormal(): boolean {
     if (this.getCurrentTileState() === tileStateNormal) {
       return true;
     } else {
@@ -95,7 +103,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
     }
   }
 
-  private ifTileStateVisited(): boolean {
+  private isTileStateVisited(): boolean {
     if (this.getCurrentTileState() === tileStateVisited) {
       return true;
     } else {
@@ -103,7 +111,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
     }
   }
 
-  private ifTileStateRevisited(): boolean {
+  private isTileStateRevisited(): boolean {
     if (this.getCurrentTileState() === tileStateRevisited) {
       return true;
     } else {
@@ -111,7 +119,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
     }
   }
 
-  private ifTileStateWall(): boolean {
+  private isTileStateWall(): boolean {
     if (this.getCurrentTileState() === tileStateWall) {
       return true;
     } else {
@@ -119,7 +127,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
     }
   }
 
-  private ifTileStatePath(): boolean {
+  private isTileStatePath(): boolean {
     if (this.getCurrentTileState() === tileStatePath) {
       return true;
     } else {
