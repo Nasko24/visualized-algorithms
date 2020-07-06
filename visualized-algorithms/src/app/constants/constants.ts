@@ -11,14 +11,14 @@ export const convergentSwarmAlgorithm: Algorithm = { name: 'Convergent Swarm' };
 export const biderectionalSwarmAlgorithm: Algorithm = { name: 'Bidirectional Swarm' };
 export const algorithms: Algorithm[] = [
   dijkstrasAlgorithm,
-  aStarAlgorithm,
-  dStarAlgorithm,
-  depthFirstSearchAlgorithm,
-  breadthFirstSearchAlgorithm,
-  greedyAlgorithm,
-  swarmAlgorithm,
-  convergentSwarmAlgorithm,
-  biderectionalSwarmAlgorithm
+  // aStarAlgorithm,
+  // dStarAlgorithm,
+  // depthFirstSearchAlgorithm,
+  // breadthFirstSearchAlgorithm,
+  // greedyAlgorithm,
+  // swarmAlgorithm,
+  // convergentSwarmAlgorithm,
+  // biderectionalSwarmAlgorithm
 ];
 
 export const recursiveBacktracker: Maze = { name: 'Recursive Backtracker', startingLocation: [0, 0] };

@@ -17,7 +17,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
   tileIsNode: boolean;
 
   private gridLocation: number[];
-  private currentTileState;
+  private currentTileState: string;
   private currentTileWeight;
   subscription: Subscription;
 
@@ -32,14 +32,16 @@ export class GridTileComponent implements OnInit, OnDestroy {
     this.tileIsNode = false;
 
     this.setCurrentTileState(tileStateNormal);
-    this.calculateGridLocation();
+    this.gridLocation = this.gridService.calculateGridLocation(this.location);
     this.applyDefaultLocationAndState();
+    this.updateGrid();
   }
 
   private checkLocationAndState(data: TileLocationAndState) {
     if (this.arraysAreEqual(this.gridLocation, [data.coordinateX, data.coordinateY])) {
       this.setCurrentTileState(data.tileState);
     }
+    this.updateGrid();
   }
 
   private arraysAreEqual(array1: number[], array2: number[])  {
@@ -51,17 +53,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
       if (array1[i] !== array2[i]) { return false; }
     }
     return true;
-  }
-
-  private calculateGridLocation() {
-    const xCoordinate = this.location % 62;
-    const yCoordinate = this.flipY(Math.floor(this.location / 62));
-
-    this.gridLocation = [xCoordinate, yCoordinate];
-  }
-
-  private flipY(yCoordinate: number): number {
-    return (gridYSize - 1) - yCoordinate;
   }
 
   private toggleTileWall() {
@@ -139,6 +130,9 @@ export class GridTileComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  // this method is called to check if the current tile is a starting node or ending node
+  // if either of those conditions are true, the grid service will dispatch an event
+  // to that grid location to change the state of the tile
   private applyDefaultLocationAndState() {
     if (this.arraysAreEqual(this.gridLocation, defaultStartNode) ||
         this.arraysAreEqual(this.gridLocation, defaultEndNode)) {
@@ -147,5 +141,13 @@ export class GridTileComponent implements OnInit, OnDestroy {
       this.setCurrentTileState(tileStatePath);
       this.tileIsNode = true;
     }
+  }
+
+  private updateGrid() {
+    const tileStateObject: TileLocationAndState = {coordinateX: this.gridLocation[0],
+                                                   coordinateY: this.gridLocation[1],
+                                                   tileState: this.currentTileState,
+                                                   tileWeight: this.currentTileWeight};
+    this.gridService.getGridState()[this.location] = tileStateObject;
   }
 }

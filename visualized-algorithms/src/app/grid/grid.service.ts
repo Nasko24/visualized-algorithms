@@ -13,6 +13,7 @@ import {CoordinateSet, Speed, TileLocationAndState} from '../constants/interface
 
 @Injectable({ providedIn: 'root' })
 export class GridService {
+  private gridState: TileLocationAndState[] = new Array(gridXSize * gridYSize);
   private gridCellCount = gridSize;
   private stateChangeSource = new Subject<TileLocationAndState>();
   private currentSpeed: Speed = speedFast;
@@ -22,6 +23,10 @@ export class GridService {
 
   constructor() {
     this.tileStack = [];
+  }
+
+  getGridState() {
+    return this.gridState;
   }
 
   getGridCellCount() {
@@ -85,6 +90,7 @@ export class GridService {
       this.emitStateChangeForLocation(tile);
       await this.sleep(25);
     }
+    console.log(JSON.stringify(this.gridState));
   }
 
   public setGridStateData(tileStack: TileLocationAndState[]) {
@@ -191,5 +197,18 @@ export class GridService {
         this.emitStateChangeForLocation(stateData);
       }
     }
+  }
+
+  // this method will calculate the grid location in [x,y] format
+  // from the index provided by the grid component
+  calculateGridLocation(location: number): number[] {
+    const xCoordinate = location % gridXSize;
+    const yCoordinate = this.flipY(Math.floor(location / gridXSize));
+
+    return [xCoordinate, yCoordinate];
+  }
+
+  private flipY(yCoordinate: number): number {
+    return (gridYSize - 1) - yCoordinate;
   }
 }
