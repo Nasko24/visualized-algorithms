@@ -25,15 +25,10 @@ export class RecursiveBacktrackerMaze {
 
   generateRecursiveBacktrackerMaze(startingTile: CoordinateSet): TileLocationAndState[] {
 
-    // this.visitedTiles.push(this.gridService.createCoordinateSet(defaultStartNode[0], defaultStartNode[1]));
-    // this.visitedTiles.push(this.gridService.createCoordinateSet(defaultEndNode[0], defaultEndNode[1]));
     this.applyTileToStacks(startingTile);
 
     // while the visited tile stack is not empty, keep going
-    const maxIterations = 1500;
-    let count = 0;
-    while (this.localStack.length !== 0 && count < maxIterations) {
-      count++;
+    while (this.localStack.length !== 0) {
 
       // get random unvisited neighbor
       // if the unvisited neighbor is null (meaning that there are no unvisited neighbors for the current tile)

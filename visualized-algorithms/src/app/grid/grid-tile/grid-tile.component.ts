@@ -17,8 +17,8 @@ export class GridTileComponent implements OnInit, OnDestroy {
   tileIsNode: boolean;
 
   private gridLocation: number[];
-  private currentTileState: string;
-  private currentTileWeight;
+  private tileState: string;
+  private tileWeight;
   subscription: Subscription;
 
   constructor(public gridService: GridService) {
@@ -28,7 +28,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentTileWeight = 1;
+    this.tileWeight = 1;
     this.tileIsNode = false;
 
     this.setCurrentTileState(tileStateNormal);
@@ -41,7 +41,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
     if (this.arraysAreEqual(this.gridLocation, [data.coordinateX, data.coordinateY])) {
       this.setCurrentTileState(data.tileState);
     }
-    this.updateGrid();
   }
 
   private arraysAreEqual(array1: number[], array2: number[])  {
@@ -67,23 +66,24 @@ export class GridTileComponent implements OnInit, OnDestroy {
     if (this.tileIsNode) {
       return;
     }
-    if (this.currentTileState === tileStateVisited && tileState === tileStateVisited) {
-      this.currentTileState = tileStateRevisited;
+    if (this.tileState === tileStateVisited && tileState === tileStateVisited) {
+      this.tileState = tileStateRevisited;
     } else {
-      this.currentTileState = tileState;
+      this.tileState = tileState;
     }
+    this.updateGrid();
   }
 
   private getCurrentTileState(): string {
-    return this.currentTileState;
+    return this.tileState;
   }
 
   private setCurrentTileWeight(tileWeight: number) {
-
+    this.tileWeight = tileWeight;
   }
 
   private getCurrentTileWeight(): number {
-    return this.currentTileWeight;
+    return this.tileWeight;
   }
 
   private isTileStateNormal(): boolean {
@@ -144,10 +144,10 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private updateGrid() {
-    const tileStateObject: TileLocationAndState = {coordinateX: this.gridLocation[0],
+    const newTileStateObject: TileLocationAndState = {coordinateX: this.gridLocation[0],
                                                    coordinateY: this.gridLocation[1],
-                                                   tileState: this.currentTileState,
-                                                   tileWeight: this.currentTileWeight};
-    this.gridService.getGridState()[this.location] = tileStateObject;
+                                                   tileState: this.tileState,
+                                                   tileWeight: this.tileWeight};
+    this.gridService.getGridState()[this.location] = newTileStateObject;
   }
 }

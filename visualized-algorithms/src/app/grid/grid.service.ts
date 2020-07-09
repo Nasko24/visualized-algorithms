@@ -29,6 +29,17 @@ export class GridService {
     return this.gridState;
   }
 
+  getAllTilesOfState(state: string): TileLocationAndState[] {
+    const tiles: TileLocationAndState[] = [];
+    for (const tile of this.gridState) {
+      if (tile.tileState === state) {
+        tiles.push(tile);
+      }
+    }
+
+    if (tiles.length === 0) { return null; } else { return tiles; }
+  }
+
   getGridCellCount() {
     return this.gridCellCount;
   }
@@ -77,18 +88,18 @@ export class GridService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async applyStackAlgorithm() {
+  async applyStackAlgorithm(speedOverride: number = null) {
     const count = this.tileStack.length;
     for (let i = 0; i < count; i++) {
       this.emitStateChangeForLocation(this.tileStack.pop());
-      await this.sleep(this.getCurrentSpeed().speedMS);
+      await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedFast.speedMS);
     }
   }
 
-  async applyStackMaze() {
+  async applyStackMaze(speedOverride: number = null) {
     for (const tile of this.tileStack) {
       this.emitStateChangeForLocation(tile);
-      await this.sleep(25);
+      await this.sleep(speedOverride == null ? 25 : speedOverride);
     }
     console.log(JSON.stringify(this.gridState));
   }

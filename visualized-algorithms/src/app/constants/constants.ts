@@ -48,6 +48,7 @@ export const tileStatePath = 'path';
 export const gridXSize = 62;
 export const gridYSize = 24;
 export const gridSize = gridXSize * gridYSize;
+export const infinity = 1073741824;
 
 export const defaultStartNode = [13, 12];
 export const defaultEndNode = [48, 12];
