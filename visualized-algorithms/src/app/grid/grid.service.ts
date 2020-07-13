@@ -18,6 +18,7 @@ export class GridService {
   private stateChangeSource = new Subject<TileLocationAndState>();
   private currentSpeed: Speed = speedFast;
   private tileStack: TileLocationAndState[];
+  private foundPathStack: TileLocationAndState[];
 
   stateChange$ = this.stateChangeSource.asObservable();
 
@@ -29,11 +30,15 @@ export class GridService {
     return this.gridState;
   }
 
-  getAllTilesOfState(state: string): TileLocationAndState[] {
-    const tiles: TileLocationAndState[] = [];
+  getAllTilesOfState(state: string): CoordinateSet[] {
+    const tiles: CoordinateSet[] = [];
     for (const tile of this.gridState) {
       if (tile.tileState === state) {
-        tiles.push(tile);
+        const coordinateSetTile: CoordinateSet = {
+          x: tile.coordinateX,
+          y: tile.coordinateY
+        };
+        tiles.push(coordinateSetTile);
       }
     }
 
@@ -86,6 +91,14 @@ export class GridService {
 
   sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async applyFoundPath(speedOverride: number = null) {
+    const count = this.foundPathStack.length;
+    for (let i = 0; i < count; i++) {
+      this.emitStateChangeForLocation(this.foundPathStack.pop());
+      await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedFast.speedMS);
+    }
   }
 
   async applyStackAlgorithm(speedOverride: number = null) {
@@ -198,6 +211,10 @@ export class GridService {
     return this.createCoordinateSet(tile.x - 1, tile.y);
   }
 
+  getTileDirectNeighbors(tile: CoordinateSet): CoordinateSet[] {
+    return [this.getTileAbove(tile), this.getTileLeft(tile), this.getTileRight(tile), this.getTileBelow(tile)];
+  }
+
   setGridToAllWalls() {
     for (let x = 0; x < gridXSize; x++) {
       for (let y = 0; y < gridYSize; y++) {
@@ -221,5 +238,14 @@ export class GridService {
 
   private flipY(yCoordinate: number): number {
     return (gridYSize - 1) - yCoordinate;
+  }
+
+  getTileWeight(inputTile: CoordinateSet): number {
+    for (const tile of this.gridState) {
+      if (inputTile.x === tile.coordinateX && inputTile.y === tile.coordinateY) { return tile.tileWeight; }
+    }
+    console.log('%cCould not find the weight for tile %O', 'color: red', inputTile);
+    console.log('%cReturning a default weight of 1', 'color: green');
+    return 1;
   }
 }
