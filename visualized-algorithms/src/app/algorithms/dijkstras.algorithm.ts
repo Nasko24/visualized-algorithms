@@ -37,6 +37,8 @@ export class DijkstrasAlgorithm {
         // if previous node is not the start node
         } else {}
       }
+
+      // TODO: choose unvisited neighbor, add it to visited list, set it as current tile, continue the while loop
     }
 
     // TODO: apply the search for the shortest path
