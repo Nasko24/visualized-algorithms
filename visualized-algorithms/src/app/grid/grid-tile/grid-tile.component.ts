@@ -144,10 +144,11 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private updateGrid() {
-    const newTileStateObject: TileLocationAndState = {coordinateX: this.gridLocation[0],
-                                                   coordinateY: this.gridLocation[1],
-                                                   tileState: this.tileState,
-                                                   tileWeight: this.tileWeight};
+    const newTileStateObject: TileLocationAndState = { coordinateX: this.gridLocation[0],
+                                                       coordinateY: this.gridLocation[1],
+                                                       tileState: this.tileState,
+                                                       tileWeight: this.tileWeight,
+                                                       tileIndex: this.location };
     this.gridService.getGridState()[this.location] = newTileStateObject;
   }
 }

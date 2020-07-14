@@ -7,7 +7,7 @@ export class DijkstrasAlgorithm {
   unvisitedTiles: CoordinateSet[];
   visitedTiles: CoordinateSet[];
   shortestPath: TileLocationAndState[];
-  nodeMap: Map<CoordinateSet, [number, CoordinateSet]>;
+  nodeMap: Map<number, [number, CoordinateSet]>;
 
   constructor(public gridService: GridService) {
     this.gridStack = [];
@@ -20,14 +20,22 @@ export class DijkstrasAlgorithm {
     this.nodeMap = this.generateMap(startTile, endTile, this.unvisitedTiles);
 
     // TODO: apply the algorithm logic and push visited tiles on this.gridStack in the order they are visited
-
     const currentTile: CoordinateSet = startTile;
     // continue running loop until all tiles have been visited or shortest path has been found
     while (this.unvisitedTiles.length > 0 && this.shortestPath.length === 0) {
       const unvisitedNeighbors: CoordinateSet[] = this.getUnvisitedNeighbors(currentTile);
 
       for (const neighbor of unvisitedNeighbors) {
-        const neighborWeight = this.gridService.getTileWeight(neighbor);
+        const travelCost: number = this.gridService.getTileWeight(neighbor);
+        const previousNode: CoordinateSet = currentTile;
+
+        // if previous node is the start node
+        if (this.gridService.coordinateSetsAreTheSame(neighbor, startTile)) {
+          // if the calculated distance is less than the known distance
+          const neighborIndex: number = this.gridService.getTileIndex(neighbor);
+          if (this.nodeMap.get(neighborIndex)[0] > travelCost) {this.nodeMap.set(neighborIndex, [travelCost, previousNode]); }
+        // if previous node is not the start node
+        } else {}
       }
     }
 
@@ -46,12 +54,14 @@ export class DijkstrasAlgorithm {
   }
 
   private generateMap(startTile: CoordinateSet, endTile: CoordinateSet, unvisitedTiles: CoordinateSet[]):
-    Map<CoordinateSet, [number, CoordinateSet]> {
+    Map<number, [number, CoordinateSet]> {
     const nodeMap = new Map();
 
-    nodeMap.set(startTile, [0, null]);
-    for (const tile of unvisitedTiles) { nodeMap.set(tile, [infinity, null]); }
-    nodeMap.set(endTile, [infinity, null]);
+    nodeMap.set(this.gridService.getTileIndex(startTile), [0, null]);
+    for (const tile of unvisitedTiles) {
+      nodeMap.set(this.gridService.getTileIndex(tile), [infinity, null]);
+    }
+    nodeMap.set(this.gridService.getTileIndex(endTile), [infinity, null]);
 
     return nodeMap;
   }

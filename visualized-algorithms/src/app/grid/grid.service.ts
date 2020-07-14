@@ -245,7 +245,14 @@ export class GridService {
       if (inputTile.x === tile.coordinateX && inputTile.y === tile.coordinateY) { return tile.tileWeight; }
     }
     console.log('%cCould not find the weight for tile %O', 'color: red', inputTile);
-    console.log('%cReturning a default weight of 1', 'color: green');
-    return 1;
+    throw new Error('Could not find the weight for tile [' + inputTile.x + ', ' + inputTile.y + ']');
+  }
+
+  getTileIndex(inputTile: CoordinateSet): number {
+    for (const tile of this.gridState) {
+      if (inputTile.x === tile.coordinateX && inputTile.y === tile.coordinateY) { return tile.tileIndex; }
+    }
+    console.log('%cCount not find the index for tile %O', 'color: red', inputTile);
+    throw new Error('Count not find the index for tile [' + inputTile.x + ', ' + inputTile.y + ']');
   }
 }

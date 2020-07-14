@@ -17,6 +17,7 @@ export interface TileLocationAndState {
   coordinateY: number;
   tileState: string;
   tileWeight?: number;
+  tileIndex?: number;
 }
 
 export interface CoordinateSet {
