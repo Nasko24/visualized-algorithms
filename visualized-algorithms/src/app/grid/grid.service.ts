@@ -24,6 +24,7 @@ export class GridService {
 
   constructor() {
     this.tileStack = [];
+    // this.generateFreshGrid();
   }
 
   getGridState() {
@@ -114,7 +115,7 @@ export class GridService {
       this.emitStateChangeForLocation(tile);
       await this.sleep(speedOverride == null ? 25 : speedOverride);
     }
-    console.log(JSON.stringify(this.gridState));
+    // console.log(JSON.stringify(this.gridState));
   }
 
   public setGridStateData(tileStack: TileLocationAndState[]) {
@@ -139,6 +140,7 @@ export class GridService {
   }
 
   existsInTileSetArray(neighbor: CoordinateSet, array: CoordinateSet[]): boolean {
+    if (neighbor == null || array == null) { return false; }
     for (const tile of array) {
       if (this.coordinateSetsAreTheSame(neighbor, tile)) {
         return true;
@@ -212,7 +214,13 @@ export class GridService {
   }
 
   getTileDirectNeighbors(tile: CoordinateSet): CoordinateSet[] {
-    return [this.getTileAbove(tile), this.getTileLeft(tile), this.getTileRight(tile), this.getTileBelow(tile)];
+    const neighbors: CoordinateSet[] = [];
+    // TODO: make sure tiles are within grid limits
+    neighbors.push(this.getTileAbove(tile));
+    neighbors.push(this.getTileBelow(tile));
+    neighbors.push(this.getTileLeft(tile));
+    neighbors.push(this.getTileRight(tile));
+    return neighbors;
   }
 
   setGridToAllWalls() {
@@ -254,5 +262,27 @@ export class GridService {
     }
     console.log('%cCount not find the index for tile %O', 'color: red', inputTile);
     throw new Error('Count not find the index for tile [' + inputTile.x + ', ' + inputTile.y + ']');
+  }
+
+  getTileCoordinates(index: number): CoordinateSet {
+    for (const tile of this.gridState) {
+      if (index === tile.tileIndex) {
+        const tileCoordinates: CoordinateSet = { x: tile.coordinateX, y: tile.coordinateY };
+        return tileCoordinates;
+      }
+    }
+    return null;
+  }
+
+  private generateFreshGrid() {
+    for (let i = 0; i < (gridXSize * gridYSize); i++) {
+      const location = this.calculateGridLocation(i);
+      const newTileStateObject: TileLocationAndState = { coordinateX: location[0],
+                                                        coordinateY: location[1],
+                                                        tileState: tileStateNormal,
+                                                        tileWeight: 1,
+                                                        tileIndex: i };
+      this.gridState[i] = newTileStateObject;
+    }
   }
 }

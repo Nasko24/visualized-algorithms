@@ -19,26 +19,41 @@ export class DijkstrasAlgorithm {
     this.shortestPath = [];
     this.nodeMap = this.generateMap(startTile, endTile, this.unvisitedTiles);
 
+    console.log('Starting algorithm...');
+
     // TODO: apply the algorithm logic and push visited tiles on this.gridStack in the order they are visited
-    const currentTile: CoordinateSet = startTile;
+    let currentTile: CoordinateSet = startTile;
     // continue running loop until all tiles have been visited or shortest path has been found
-    while (this.unvisitedTiles.length > 0 && this.shortestPath.length === 0) {
+    let count = 0;
+    const limit = 500;
+    while (this.unvisitedTiles.length > 0 && this.shortestPath.length === 0 && count < limit) {
+      count++;
+
       const unvisitedNeighbors: CoordinateSet[] = this.getUnvisitedNeighbors(currentTile);
 
-      for (const neighbor of unvisitedNeighbors) {
-        const travelCost: number = this.gridService.getTileWeight(neighbor);
-        const previousNode: CoordinateSet = currentTile;
+      console.log('Current tile ' + JSON.stringify(currentTile));
 
-        // if previous node is the start node
-        if (this.gridService.coordinateSetsAreTheSame(neighbor, startTile)) {
-          // if the calculated distance is less than the known distance
-          const neighborIndex: number = this.gridService.getTileIndex(neighbor);
-          if (this.nodeMap.get(neighborIndex)[0] > travelCost) {this.nodeMap.set(neighborIndex, [travelCost, previousNode]); }
-        // if previous node is not the start node
-        } else {}
+      for (const neighbor of unvisitedNeighbors) {
+        const previousNode: CoordinateSet = currentTile;
+        const neighborDistanceFromStart: number = this.nodeMap.get(this.gridService.getTileIndex(currentTile))[0]
+          + this.gridService.getTileWeight(neighbor);
+
+        if (neighborDistanceFromStart < this.nodeMap.get(this.gridService.getTileIndex(neighbor))[0]) {
+          this.setShortestDistanceAndPreviousNode(neighbor, neighborDistanceFromStart, previousNode);
+        }
       }
 
-      // TODO: choose unvisited neighbor, add it to visited list, set it as current tile, continue the while loop
+      this.removeNodeFromUnvisitedTiles(currentTile);
+      this.addNodeToVisitedTiles(currentTile);
+      currentTile = this.getUnvisitedTileWithShortestDistanceFromStart();
+      console.log('Switching current tile to: ' + JSON.stringify(currentTile));
+
+      // TODO: choose unvisited neighbor with shortest distance from start tile
+      //  add it to visited list, set it as current tile, continue the while loop
+    }
+
+    for (const entry of this.nodeMap.entries()) {
+      console.log('Node Map entry: ' + JSON.stringify(entry));
     }
 
     // TODO: apply the search for the shortest path
@@ -49,10 +64,11 @@ export class DijkstrasAlgorithm {
 
   private getUnvisitedNeighbors(tile: CoordinateSet): CoordinateSet[] {
     const neighbors: CoordinateSet[] = this.gridService.getTileDirectNeighbors(tile);
+    const unvisitedNeighbors: CoordinateSet[] = [];
     for (const item of neighbors) {
-      if (!this.gridService.existsInTileSetArray(item, this.visitedTiles)) { neighbors.push(item); }
+      if (!this.gridService.existsInTileSetArray(item, this.visitedTiles)) { unvisitedNeighbors.push(item); }
     }
-    return neighbors;
+    return unvisitedNeighbors;
   }
 
   private generateMap(startTile: CoordinateSet, endTile: CoordinateSet, unvisitedTiles: CoordinateSet[]):
@@ -66,5 +82,30 @@ export class DijkstrasAlgorithm {
     nodeMap.set(this.gridService.getTileIndex(endTile), [infinity, null]);
 
     return nodeMap;
+  }
+
+  private setShortestDistanceAndPreviousNode(neighbor: CoordinateSet, distance: number, previousNode: CoordinateSet) {
+    this.nodeMap.set(this.gridService.getTileIndex(neighbor), [distance, previousNode]);
+  }
+
+  private getUnvisitedTileWithShortestDistanceFromStart(): CoordinateSet {
+    let smallest: number = infinity;
+    let nodeCoordinates: CoordinateSet = null;
+    for (const [key, value] of this.nodeMap) {
+      if (value[0] < smallest && this.gridService.existsInTileSetArray(this.gridService.getTileCoordinates(key), this.unvisitedTiles)) {
+        // console.log('Conditions met for this node: ' + JSON.stringify(value[1]));
+        smallest = value[0];
+        nodeCoordinates = this.gridService.getTileCoordinates(key);
+      }
+    }
+    return nodeCoordinates;
+  }
+
+  private addNodeToVisitedTiles(currentTile: CoordinateSet) {
+    this.visitedTiles.push(currentTile);
+  }
+
+  private removeNodeFromUnvisitedTiles(currentTile: CoordinateSet) {
+    this.unvisitedTiles = this.unvisitedTiles.filter(tile => !this.gridService.coordinateSetsAreTheSame(tile, currentTile));
   }
 }

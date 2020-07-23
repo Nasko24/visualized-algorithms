@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   tileStateNormal, tileStatePath, tileStateRevisited,
   tileStateVisited, tileStateWall, gridYSize, defaultStartNode, defaultEndNode
@@ -71,7 +71,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
     } else {
       this.tileState = tileState;
     }
-    this.updateGrid();
   }
 
   private getCurrentTileState(): string {

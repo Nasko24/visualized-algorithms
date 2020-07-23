@@ -17,7 +17,7 @@ export class AlgorithmsService {
           this.gridService.createCoordinateSet(defaultStartNode[0], defaultStartNode[1]),
           this.gridService.createCoordinateSet(defaultEndNode[0], defaultEndNode[1])));
 
-        this.gridService.applyStackAlgorithm();
+        // this.gridService.applyStackAlgorithm();
         break;
       }
       default:
