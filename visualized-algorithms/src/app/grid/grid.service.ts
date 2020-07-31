@@ -18,12 +18,14 @@ export class GridService {
   private stateChangeSource = new Subject<TileLocationAndState>();
   private currentSpeed: Speed = speedFast;
   private tileStack: TileLocationAndState[];
+  private shortestPathStack: TileLocationAndState[];
   private foundPathStack: TileLocationAndState[];
 
   stateChange$ = this.stateChangeSource.asObservable();
 
   constructor() {
     this.tileStack = [];
+    this.shortestPathStack = [];
     // this.generateFreshGrid();
   }
 
@@ -74,10 +76,15 @@ export class GridService {
       }
     }
     this.clearTileStack();
+    this.clearShortestPathStack();
   }
 
   private clearTileStack() {
     this.tileStack = [];
+  }
+
+  private clearShortestPathStack() {
+    this.shortestPathStack = [];
   }
 
   getStartNodeLocation(): CoordinateSet {
@@ -107,6 +114,12 @@ export class GridService {
       this.emitStateChangeForLocation(tile);
       await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedOverride);
     }
+    for (const tile of this.shortestPathStack) {
+      this.emitStateChangeForLocation(tile);
+      await this.sleep(speedOverride == null ? 25 : speedOverride);
+    }
+    this.clearTileStack();
+    this.clearShortestPathStack();
   }
 
   async applyStackMaze(speedOverride: number = null) {
@@ -114,18 +127,22 @@ export class GridService {
       this.emitStateChangeForLocation(tile);
       await this.sleep(speedOverride == null ? 25 : speedOverride);
     }
-    // console.log(JSON.stringify(this.gridState));
+    this.clearTileStack();
   }
 
   public setGridStateData(tileStack: TileLocationAndState[]) {
     this.tileStack = tileStack;
   }
 
+  public setShortestPathStateData(shortestPathStack: TileLocationAndState[]) {
+    this.shortestPathStack = shortestPathStack;
+  }
+
   public getGridStateData(): TileLocationAndState[] {
     return this.tileStack;
   }
 
-  pushStateData(stateData: TileLocationAndState) {
+  public pushStateData(stateData: TileLocationAndState) {
     this.tileStack.push(stateData);
   }
 
@@ -214,12 +231,17 @@ export class GridService {
 
   getTileDirectNeighbors(tile: CoordinateSet): CoordinateSet[] {
     const neighbors: CoordinateSet[] = [];
-    // TODO: make sure tiles are within grid limits
+    const neighborsWithinLimit: CoordinateSet[] = [];
+
     neighbors.push(this.getTileAbove(tile));
     neighbors.push(this.getTileBelow(tile));
     neighbors.push(this.getTileLeft(tile));
     neighbors.push(this.getTileRight(tile));
-    return neighbors;
+
+    for (const neighbor of neighbors) {
+      if (this.withinGridLimit(neighbor)) { neighborsWithinLimit.push(neighbor); }
+    }
+    return neighborsWithinLimit;
   }
 
   setGridToAllWalls() {
@@ -282,6 +304,14 @@ export class GridService {
                                                         tileWeight: 1,
                                                         tileIndex: i };
       this.gridState[i] = newTileStateObject;
+    }
+  }
+
+  private withinGridLimit(tile: CoordinateSet): boolean {
+    if (tile.x < gridXSize && tile.x > -1 && tile.y < gridYSize && tile.y > -1) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

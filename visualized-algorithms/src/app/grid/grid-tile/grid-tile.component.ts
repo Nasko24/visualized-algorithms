@@ -31,10 +31,9 @@ export class GridTileComponent implements OnInit, OnDestroy {
     this.tileWeight = 1;
     this.tileIsNode = false;
 
-    this.setCurrentTileState(tileStateNormal);
     this.gridLocation = this.gridService.calculateGridLocation(this.location);
     this.applyDefaultLocationAndState();
-    this.updateGrid();
+    this.setCurrentTileState(tileStateNormal);
   }
 
   private checkLocationAndState(data: TileLocationAndState) {
@@ -57,9 +56,12 @@ export class GridTileComponent implements OnInit, OnDestroy {
   private toggleTileWall() {
     if (this.getCurrentTileState() === tileStateWall) {
       this.setCurrentTileState(tileStateNormal);
+      console.log('Toggle tile ' + this.gridLocation + ' to state: ' + tileStateNormal);
     } else {
       this.setCurrentTileState(tileStateWall);
+      console.log('Toggle tile ' + this.gridLocation + ' to state: ' + tileStateWall);
     }
+    this.updateGrid();
   }
 
   private setCurrentTileState(tileState: string) {
@@ -71,6 +73,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
     } else {
       this.tileState = tileState;
     }
+    this.updateGrid();
   }
 
   private getCurrentTileState(): string {

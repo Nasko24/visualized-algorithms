@@ -57,21 +57,6 @@ export class HeaderComponent implements OnInit {
     this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
     this.algorithmsService.applyAlgorithm(this.currentAlgorithm);
     // TODO: this will launch the visualize state
-    // call algorithms service and pass a state of the grid to it
-    // defining the tiles that cannot be visited (wall tiles)
-
-    // TEST CODE
-    // for (let i = 0; i < 200; i++) {
-    //   const randomNumberX = this.randomNumber(0, 61);
-    //   const randomNumberY = this.randomNumber(0, 23);
-    //   const stateData: TileLocationAndState = {
-    //     coordinateX: randomNumberX,
-    //     coordinateY: randomNumberY,
-    //     tileState: tileStateVisited};
-    //   this.gridService.pushStateData(stateData);
-    // }
-    // this.gridService.applyStackAlgorithm();
-    // END TEST CODE
   }
 
   randomNumber(min: number, max: number): number {
