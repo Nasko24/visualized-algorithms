@@ -1,6 +1,6 @@
 import {GridService} from '../grid/grid.service';
 import {CoordinateSet, TileLocationAndState} from '../constants/interfaces';
-import {infinity, tileStateNormal} from '../constants/constants';
+import {infinity, tileStateNormal, tileStateVisited} from '../constants/constants';
 
 export class DijkstrasAlgorithm {
   gridStack: TileLocationAndState[];
@@ -25,7 +25,7 @@ export class DijkstrasAlgorithm {
     let currentTile: CoordinateSet = startTile;
     // continue running loop until all tiles have been visited or shortest path has been found
     let count = 0;
-    const limit = 500;
+    const limit = 200;
     while (this.unvisitedTiles.length > 0 && this.shortestPath.length === 0 && count < limit) {
       count++;
 
@@ -48,13 +48,12 @@ export class DijkstrasAlgorithm {
       currentTile = this.getUnvisitedTileWithShortestDistanceFromStart();
       console.log('Switching current tile to: ' + JSON.stringify(currentTile));
 
-      // TODO: choose unvisited neighbor with shortest distance from start tile
-      //  add it to visited list, set it as current tile, continue the while loop
+      this.gridStack.push(this.gridService.createTileLocationAndStateObject(currentTile, tileStateVisited));
     }
 
-    for (const entry of this.nodeMap.entries()) {
-      console.log('Node Map entry: ' + JSON.stringify(entry));
-    }
+    // for (const entry of this.nodeMap.entries()) {
+    //   console.log('Node Map entry: ' + JSON.stringify(entry));
+    // }
 
     // TODO: apply the search for the shortest path
 

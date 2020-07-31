@@ -103,10 +103,9 @@ export class GridService {
   }
 
   async applyStackAlgorithm(speedOverride: number = null) {
-    const count = this.tileStack.length;
-    for (let i = 0; i < count; i++) {
-      this.emitStateChangeForLocation(this.tileStack.pop());
-      await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedFast.speedMS);
+    for (const tile of this.tileStack) {
+      this.emitStateChangeForLocation(tile);
+      await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedOverride);
     }
   }
 
@@ -149,8 +148,8 @@ export class GridService {
     return false;
   }
 
-  createTileLocationAndStateObject(currentTile: CoordinateSet, weight: number = 1): TileLocationAndState {
-    return { coordinateX: currentTile.x, coordinateY: currentTile.y, tileState: tileStateNormal, tileWeight: weight};
+  createTileLocationAndStateObject(currentTile: CoordinateSet, state: string = tileStateNormal, weight: number = 1): TileLocationAndState {
+    return { coordinateX: currentTile.x, coordinateY: currentTile.y, tileState: state, tileWeight: weight};
   }
 
   getUpperNeighbors(currentTile: CoordinateSet): CoordinateSet[] {
