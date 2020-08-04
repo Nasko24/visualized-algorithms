@@ -1,7 +1,7 @@
-import {AfterContentInit, AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   tileStateNormal, tileStatePath, tileStateRevisited,
-  tileStateVisited, tileStateWall, gridYSize, defaultStartNode, defaultEndNode
+  tileStateVisited, tileStateWall
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
@@ -14,7 +14,8 @@ import {TileLocationAndState} from '../../constants/interfaces';
 })
 export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
-  tileIsNode: boolean;
+  tileIsStartNode: boolean;
+  tileIsEndNode: boolean;
 
   private gridLocation: number[];
   private tileState: string;
@@ -28,12 +29,14 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.tileWeight = 1;
-    this.tileIsNode = false;
-
+    this.tileIsStartNode = false;
+    this.tileIsEndNode = false;
     this.gridLocation = this.gridService.calculateGridLocation(this.location);
-    this.applyDefaultLocationAndState();
+
+    this.setCurrentTileWeight(1);
+    this.setStartAndEndTiles();
     this.setCurrentTileState(tileStateNormal);
+    this.setPathListener();
   }
 
   private checkLocationAndState(data: TileLocationAndState) {
@@ -65,7 +68,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private setCurrentTileState(tileState: string) {
-    if (this.tileIsNode) {
+    if (this.tileIsStartNode || this.tileIsEndNode) {
       return;
     }
     if (this.tileState === tileStateVisited && tileState === tileStateVisited) {
@@ -97,35 +100,23 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private isTileStateVisited(): boolean {
-    if (this.getCurrentTileState() === tileStateVisited) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStateVisited) { return true; } else { return false; }
   }
 
   private isTileStateRevisited(): boolean {
-    if (this.getCurrentTileState() === tileStateRevisited) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStateRevisited) { return true; } else { return false; }
   }
 
   private isTileStateWall(): boolean {
-    if (this.getCurrentTileState() === tileStateWall) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStateWall) { return true; } else { return false; }
   }
 
   private isTileStatePath(): boolean {
-    if (this.getCurrentTileState() === tileStatePath) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStatePath) { return true; } else { return false; }
+  }
+
+  private isTileNode(): boolean {
+    if (this.tileIsStartNode || this.tileIsEndNode) { return true; } else { return false; }
   }
 
   ngOnDestroy() {
@@ -135,13 +126,15 @@ export class GridTileComponent implements OnInit, OnDestroy {
   // this method is called to check if the current tile is a starting node or ending node
   // if either of those conditions are true, the grid service will dispatch an event
   // to that grid location to change the state of the tile
-  private applyDefaultLocationAndState() {
-    if (this.arraysAreEqual(this.gridLocation, defaultStartNode) ||
-        this.arraysAreEqual(this.gridLocation, defaultEndNode)) {
+  private setStartAndEndTiles() {
+    if (this.arraysAreEqual(this.gridLocation, this.gridService.getStartNodeLocationArray())) {
       // TODO: apply the start and end node icons to the tile
-      // current solution is temporary
-      this.setCurrentTileState(tileStatePath);
-      this.tileIsNode = true;
+      this.setCurrentTileState(tileStateNormal);
+      this.tileIsStartNode = true;
+    } else if (this.arraysAreEqual(this.gridLocation, this.gridService.getEndNodeLocationArray())) {
+      // TODO: apply the start and end node icons to the tile
+      this.setCurrentTileState(tileStateNormal);
+      this.tileIsEndNode = true;
     }
   }
 
@@ -152,5 +145,17 @@ export class GridTileComponent implements OnInit, OnDestroy {
                                                        tileWeight: this.tileWeight,
                                                        tileIndex: this.location };
     this.gridService.getGridState()[this.location] = newTileStateObject;
+  }
+
+  private setPathListener() {
+    if (this.isTileNode()) {
+      this.subscription = this.gridService.nodeChange$.subscribe((data) => {
+        if (data === 0) {
+          this.tileState = tileStatePath;
+        } else if (data === 1) {
+          this.tileState = tileStatePath;
+        }
+      });
+    }
   }
 }

@@ -56,6 +56,7 @@ export class HeaderComponent implements OnInit {
   onClickVisualize() {
     this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
     this.algorithmsService.applyAlgorithm(this.currentAlgorithm);
+    this.algorithmButtonToggle = !this.algorithmButtonToggle;
     // TODO: this will launch the visualize state
   }
 

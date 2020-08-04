@@ -1,5 +1,5 @@
 import {CoordinateSet, TileLocationAndState} from '../constants/interfaces';
-import {defaultEndNode, defaultStartNode, gridXSize, gridYSize} from '../constants/constants';
+import {gridXSize, gridYSize} from '../constants/constants';
 import {GridService} from '../grid/grid.service';
 
 export class RecursiveBacktrackerMaze {
