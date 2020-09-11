@@ -6,7 +6,7 @@ import {
   gridXSize,
   gridYSize,
   speedFast,
-  tileStateNormal, tileStateWall
+  tileStateNormal, tileStatePath, tileStateVisited, tileStateWall
 } from '../constants/constants';
 import {Subject} from 'rxjs';
 import {CoordinateSet, Speed, TileLocationAndState} from '../constants/interfaces';
@@ -17,14 +17,14 @@ export class GridService {
   private gridCellCount = gridSize;
 
   private stateChangeSource = new Subject<TileLocationAndState>();
-  private nodeChangeSource = new Subject<number>();
+  private directStateChangeSource = new Subject<TileLocationAndState>();
 
   private currentSpeed: Speed = speedFast;
   private tileStack: TileLocationAndState[];
   private foundPathStack: TileLocationAndState[];
 
   stateChange$ = this.stateChangeSource.asObservable();
-  nodeChange$ = this.nodeChangeSource.asObservable();
+  directStateChange$ = this.directStateChangeSource.asObservable();
 
   constructor() {
     this.tileStack = [];
@@ -62,8 +62,8 @@ export class GridService {
     this.stateChangeSource.next(data);
   }
 
-  emitPathChange(data: number) {
-    this.nodeChangeSource.next(data);
+  emitDirectStateChange(data: TileLocationAndState) {
+    this.directStateChangeSource.next(data);
   }
 
   setCurrentSpeed(speed: Speed) {
@@ -107,6 +107,17 @@ export class GridService {
     return defaultStartNode;
   }
 
+  getStartNodeLocationAndState(state: string = null): TileLocationAndState {
+    // TODO: service needs to know the actual start node location if its been moved
+    for (const tile of this.gridState) {
+      if (this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getStartNodeLocation())) {
+        if (state === null) { return tile; } else { tile.tileState = state; return tile; }
+      }
+    }
+    console.log('%cCould not find START node in grid %O', 'color: red');
+    throw new Error('Could not find START node in grid...');
+  }
+
   getEndNodeLocation(): CoordinateSet {
     // TODO: service needs to know the actual end node location
     return this.createCoordinateSet(defaultEndNode[0], defaultEndNode[1]);
@@ -117,25 +128,45 @@ export class GridService {
     return defaultEndNode;
   }
 
+  getEndNodeLocationAndState(state: string = null): TileLocationAndState {
+    // TODO: service needs to know the actual start node location if its been moved
+    for (const tile of this.gridState) {
+      if (this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getEndNodeLocation())) {
+        if (state === null) { return tile; } else { tile.tileState = state; return tile; }
+      }
+    }
+    console.log('%cCould not find END node in grid %O', 'color: red');
+    throw new Error('Could not find END node in grid...');
+  }
+
   sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async applyFoundPath(speedOverride: number = null) {
-    this.emitPathChange(0);
+    this.emitDirectStateChange(this.getStartNodeLocationAndState(tileStatePath));
+    await this.sleep(speedOverride == null ? 25 : speedOverride);
+
     for (const tile of this.foundPathStack) {
       this.emitStateChangeForLocation(tile);
       await this.sleep(speedOverride == null ? 25 : speedOverride);
     }
-    this.emitPathChange(1);
+
+    this.emitDirectStateChange(this.getEndNodeLocationAndState(tileStatePath));
     this.clearPathStack();
   }
 
   async applyStackAlgorithm(speedOverride: number = null) {
+    this.emitDirectStateChange(this.getStartNodeLocationAndState(tileStateVisited));
+    await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedOverride);
+
     for (const tile of this.tileStack) {
       this.emitStateChangeForLocation(tile);
       await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedOverride);
     }
+
+    this.emitDirectStateChange(this.getEndNodeLocationAndState(tileStateVisited));
+
     this.applyFoundPath();
     this.clearTileStack();
   }
