@@ -26,9 +26,12 @@ export class GridService {
   stateChange$ = this.stateChangeSource.asObservable();
   directStateChange$ = this.directStateChangeSource.asObservable();
 
+  private mousePressed: boolean;
+
   constructor() {
     this.tileStack = [];
     this.foundPathStack = [];
+    this.mousePressed = false;
   }
 
   getGridState() {
@@ -85,6 +88,8 @@ export class GridService {
         this.emitStateChangeForLocation(stateData);
       }
     }
+    this.resetStartAndEndNodes();
+
     this.clearTileStack();
     this.clearPathStack();
   }
@@ -95,6 +100,11 @@ export class GridService {
 
   private clearPathStack() {
     this.foundPathStack = [];
+  }
+
+  private resetStartAndEndNodes() {
+    this.emitDirectStateChange(this.getStartNodeLocationAndState(tileStateNormal));
+    this.emitDirectStateChange(this.getEndNodeLocationAndState(tileStateNormal));
   }
 
   getStartNodeLocation(): CoordinateSet {
@@ -362,5 +372,17 @@ export class GridService {
     } else {
       return false;
     }
+  }
+
+  mouseDown() {
+    this.mousePressed = true;
+  }
+
+  mouseUp() {
+    this.mousePressed = false;
+  }
+
+  getMouseState() {
+    return this.mousePressed;
   }
 }

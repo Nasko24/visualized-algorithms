@@ -3,8 +3,9 @@
                     'tile-visited-cyan' : this.isTileStateVisited(),
                     'tile-visited-purple' : this.isTileStateRevisited(),
                     'tile-path' : this.isTileStatePath()}"
-          (click)="toggleTileWall()">
+          (mousedown)="mouseDown()"
+          (mouseup)="mouseUp()"
+          (mouseover)="toggleTileWallPressed()">
   <mat-icon *ngIf="tileIsStartNode">arrow_forward_ios</mat-icon>
   <mat-icon *ngIf="tileIsEndNode">room</mat-icon>
 </button>
-
