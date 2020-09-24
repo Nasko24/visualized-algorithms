@@ -28,10 +28,15 @@ export class GridService {
 
   private mousePressed: boolean;
 
+  private startNodeLocation: CoordinateSet;
+  private endNodeLocation: CoordinateSet;
+
   constructor() {
     this.tileStack = [];
     this.foundPathStack = [];
     this.mousePressed = false;
+    this.startNodeLocation = this.createCoordinateSet(defaultStartNode[0], defaultStartNode[1]);
+    this.endNodeLocation = this.createCoordinateSet(defaultEndNode[0], defaultEndNode[1]);
   }
 
   getGridState() {
@@ -108,17 +113,14 @@ export class GridService {
   }
 
   getStartNodeLocation(): CoordinateSet {
-    // TODO: service needs to know the actual start node location if its been moved
-    return this.createCoordinateSet(defaultStartNode[0], defaultStartNode[1]);
+    return this.startNodeLocation;
   }
 
   getStartNodeLocationArray(): number[] {
-    // TODO: service needs to know the actual start node location if its been moved
-    return defaultStartNode;
+    return [this.startNodeLocation.x, this.startNodeLocation.y];
   }
 
   getStartNodeLocationAndState(state: string = null): TileLocationAndState {
-    // TODO: service needs to know the actual start node location if its been moved
     for (const tile of this.gridState) {
       if (this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getStartNodeLocation())) {
         if (state === null) { return tile; } else { tile.tileState = state; return tile; }
@@ -129,17 +131,14 @@ export class GridService {
   }
 
   getEndNodeLocation(): CoordinateSet {
-    // TODO: service needs to know the actual end node location
-    return this.createCoordinateSet(defaultEndNode[0], defaultEndNode[1]);
+    return this.endNodeLocation;
   }
 
   getEndNodeLocationArray(): number[] {
-    // TODO: service needs to know the actual end node location
-    return defaultEndNode;
+    return [this.endNodeLocation.x, this.endNodeLocation.y];
   }
 
   getEndNodeLocationAndState(state: string = null): TileLocationAndState {
-    // TODO: service needs to know the actual start node location if its been moved
     for (const tile of this.gridState) {
       if (this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getEndNodeLocation())) {
         if (state === null) { return tile; } else { tile.tileState = state; return tile; }
@@ -382,7 +381,7 @@ export class GridService {
     this.mousePressed = false;
   }
 
-  getMouseState() {
+  getMouseState(): boolean {
     return this.mousePressed;
   }
 }

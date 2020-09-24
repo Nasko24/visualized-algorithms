@@ -167,7 +167,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
     this.gridService.mouseUp();
   }
 
-  toggleTileWallPressed() {
+  private mouseOver() {
     if (this.gridService.getMouseState()) { this.toggleTileWall(); } else { return; }
   }
 }
