@@ -5,7 +5,9 @@
                     'tile-path' : this.isTileStatePath()}"
           (mousedown)="mouseDown()"
           (mouseup)="mouseUp()"
-          (mouseover)="mouseOver()">
+          (mouseover)="mouseOver()"
+          (mouseleave)="mouseLeave()"
+          (mouseenter)="mouseEnter()">
   <mat-icon *ngIf="tileIsStartNode">arrow_forward_ios</mat-icon>
   <mat-icon *ngIf="tileIsEndNode">room</mat-icon>
 </button>

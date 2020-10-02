@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {
   defaultEndNode,
-  defaultStartNode,
+  defaultStartNode, emptyString,
   gridSize,
   gridXSize,
   gridYSize,
@@ -27,6 +27,7 @@ export class GridService {
   directStateChange$ = this.directStateChangeSource.asObservable();
 
   private mousePressed: boolean;
+  private movingNode = emptyString;
 
   private startNodeLocation: CoordinateSet;
   private endNodeLocation: CoordinateSet;
@@ -112,6 +113,10 @@ export class GridService {
     this.emitDirectStateChange(this.getEndNodeLocationAndState(tileStateNormal));
   }
 
+  setStartNodeLocation(startNodeCoordinates: number[]) {
+    this.startNodeLocation = { x: startNodeCoordinates[0], y: startNodeCoordinates[1] };
+  }
+
   getStartNodeLocation(): CoordinateSet {
     return this.startNodeLocation;
   }
@@ -128,6 +133,10 @@ export class GridService {
     }
     console.log('%cCould not find START node in grid %O', 'color: red');
     throw new Error('Could not find START node in grid...');
+  }
+
+  setEndNodeLocation(endNodeCoordinates: number[]) {
+    this.endNodeLocation = { x: endNodeCoordinates[0], y: endNodeCoordinates[1] };
   }
 
   getEndNodeLocation(): CoordinateSet {
@@ -379,9 +388,22 @@ export class GridService {
 
   mouseUp() {
     this.mousePressed = false;
+    this.movingNode = emptyString;
   }
 
   getMouseState(): boolean {
     return this.mousePressed;
+  }
+
+  moveNode(movingNode: string) {
+    this.movingNode = movingNode;
+  }
+
+  getMovingNode(): string {
+    return this.movingNode;
+  }
+
+  isNodeMoving(): boolean {
+    if (this.movingNode === emptyString) { return false; } else { return true; }
   }
 }

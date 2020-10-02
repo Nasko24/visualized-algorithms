@@ -1,11 +1,13 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
+  endNodeName,
+  startNodeName,
   tileStateNormal, tileStatePath, tileStateRevisited,
   tileStateVisited, tileStateWall
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
-import {TileLocationAndState} from '../../constants/interfaces';
+import {CoordinateSet, TileLocationAndState} from '../../constants/interfaces';
 
 @Component({
   selector: 'app-grid-tile',
@@ -160,14 +162,51 @@ export class GridTileComponent implements OnInit, OnDestroy {
 
   private mouseDown() {
     this.gridService.mouseDown();
-    this.toggleTileWall();
+    if (this.tileIsStartNode) {
+      this.gridService.moveNode(startNodeName);
+    } else if (this.tileIsEndNode) {
+      this.gridService.moveNode(endNodeName);
+    } else {
+      this.toggleTileWall();
+    }
+    console.log('MOUSE HAS BEEN PRESSED');
   }
 
   private mouseUp() {
+    if (this.gridService.isNodeMoving()) {
+      if (this.gridService.getMovingNode() === startNodeName) {
+        this.gridService.setStartNodeLocation(this.gridLocation);
+      } else if (this.gridService.getMovingNode() === endNodeName) {
+        this.gridService.setEndNodeLocation(this.gridLocation);
+      }
+    }
     this.gridService.mouseUp();
+    console.log('MOUSE HAS BEEN RELEASED');
   }
 
   private mouseOver() {
-    if (this.gridService.getMouseState()) { this.toggleTileWall(); } else { return; }
+    if (this.gridService.getMouseState() && !this.gridService.isNodeMoving()) { this.toggleTileWall(); } else { return; }
+  }
+
+  mouseLeave() {
+    if (this.gridService.getMouseState()) {
+      console.log('MOUSE LEAVE TRIGGERED WHILE MOUSE IS PRESSED');
+      if (this.gridService.getMovingNode() === startNodeName) {
+        this.tileIsStartNode = false;
+      } else if (this.gridService.getMovingNode() === endNodeName) {
+        this.tileIsEndNode = false;
+      }
+    }
+  }
+
+  mouseEnter() {
+    if (this.gridService.getMouseState()) {
+      console.log('MOUSE ENTER TRIGGERED WHILE MOUSE IS PRESSED');
+      if (this.gridService.getMovingNode() === startNodeName) {
+        this.tileIsStartNode = true;
+      } else if (this.gridService.getMovingNode() === endNodeName) {
+        this.tileIsEndNode = true;
+      }
+    }
   }
 }
