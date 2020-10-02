@@ -1,11 +1,13 @@
-import {AfterContentInit, AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {
+  endNodeName,
+  startNodeName,
   tileStateNormal, tileStatePath, tileStateRevisited,
-  tileStateVisited, tileStateWall, gridYSize, defaultStartNode, defaultEndNode
+  tileStateVisited, tileStateWall
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
-import {TileLocationAndState} from '../../constants/interfaces';
+import {CoordinateSet, TileLocationAndState} from '../../constants/interfaces';
 
 @Component({
   selector: 'app-grid-tile',
@@ -14,25 +16,31 @@ import {TileLocationAndState} from '../../constants/interfaces';
 })
 export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
-  tileIsNode: boolean;
+  tileIsStartNode: boolean;
+  tileIsEndNode: boolean;
 
   private gridLocation: number[];
   private tileState: string;
   private tileWeight;
-  subscription: Subscription;
+  stateChangeSubscription: Subscription;
+  directStateChangeSubscription: Subscription;
 
   constructor(public gridService: GridService) {
-    this.subscription = this.gridService.stateChange$.subscribe((data) => {
+    this.stateChangeSubscription = this.gridService.stateChange$.subscribe((data) => {
       this.checkLocationAndState(data);
+    });
+    this.directStateChangeSubscription = this.gridService.directStateChange$.subscribe((data) => {
+      this.applyLocationAndState(data);
     });
   }
 
   ngOnInit() {
-    this.tileWeight = 1;
-    this.tileIsNode = false;
-
+    this.tileIsStartNode = false;
+    this.tileIsEndNode = false;
     this.gridLocation = this.gridService.calculateGridLocation(this.location);
-    this.applyDefaultLocationAndState();
+
+    this.setCurrentTileWeight(1);
+    this.setStartAndEndTiles();
     this.setCurrentTileState(tileStateNormal);
   }
 
@@ -65,7 +73,7 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private setCurrentTileState(tileState: string) {
-    if (this.tileIsNode) {
+    if (this.tileIsStartNode || this.tileIsEndNode) {
       return;
     }
     if (this.tileState === tileStateVisited && tileState === tileStateVisited) {
@@ -97,51 +105,42 @@ export class GridTileComponent implements OnInit, OnDestroy {
   }
 
   private isTileStateVisited(): boolean {
-    if (this.getCurrentTileState() === tileStateVisited) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStateVisited) { return true; } else { return false; }
   }
 
   private isTileStateRevisited(): boolean {
-    if (this.getCurrentTileState() === tileStateRevisited) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStateRevisited) { return true; } else { return false; }
   }
 
   private isTileStateWall(): boolean {
-    if (this.getCurrentTileState() === tileStateWall) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStateWall) { return true; } else { return false; }
   }
 
   private isTileStatePath(): boolean {
-    if (this.getCurrentTileState() === tileStatePath) {
-      return true;
-    } else {
-      return false;
-    }
+    if (this.getCurrentTileState() === tileStatePath) { return true; } else { return false; }
+  }
+
+  private isTileNode(): boolean {
+    if (this.tileIsStartNode || this.tileIsEndNode) { return true; } else { return false; }
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.stateChangeSubscription.unsubscribe();
+    this.directStateChangeSubscription.unsubscribe();
   }
 
   // this method is called to check if the current tile is a starting node or ending node
   // if either of those conditions are true, the grid service will dispatch an event
   // to that grid location to change the state of the tile
-  private applyDefaultLocationAndState() {
-    if (this.arraysAreEqual(this.gridLocation, defaultStartNode) ||
-        this.arraysAreEqual(this.gridLocation, defaultEndNode)) {
+  private setStartAndEndTiles() {
+    if (this.arraysAreEqual(this.gridLocation, this.gridService.getStartNodeLocationArray())) {
       // TODO: apply the start and end node icons to the tile
-      // current solution is temporary
-      this.setCurrentTileState(tileStatePath);
-      this.tileIsNode = true;
+      this.setCurrentTileState(tileStateNormal);
+      this.tileIsStartNode = true;
+    } else if (this.arraysAreEqual(this.gridLocation, this.gridService.getEndNodeLocationArray())) {
+      // TODO: apply the start and end node icons to the tile
+      this.setCurrentTileState(tileStateNormal);
+      this.tileIsEndNode = true;
     }
   }
 
@@ -152,5 +151,62 @@ export class GridTileComponent implements OnInit, OnDestroy {
                                                        tileWeight: this.tileWeight,
                                                        tileIndex: this.location };
     this.gridService.getGridState()[this.location] = newTileStateObject;
+  }
+
+  private applyLocationAndState(data: TileLocationAndState) {
+    if (this.arraysAreEqual(this.gridLocation, [data.coordinateX, data.coordinateY])) {
+      this.tileState = data.tileState;
+      this.updateGrid();
+    }
+  }
+
+  private mouseDown() {
+    this.gridService.mouseDown();
+    if (this.tileIsStartNode) {
+      this.gridService.moveNode(startNodeName);
+    } else if (this.tileIsEndNode) {
+      this.gridService.moveNode(endNodeName);
+    } else {
+      this.toggleTileWall();
+    }
+    console.log('MOUSE HAS BEEN PRESSED');
+  }
+
+  private mouseUp() {
+    if (this.gridService.isNodeMoving()) {
+      if (this.gridService.getMovingNode() === startNodeName) {
+        this.gridService.setStartNodeLocation(this.gridLocation);
+      } else if (this.gridService.getMovingNode() === endNodeName) {
+        this.gridService.setEndNodeLocation(this.gridLocation);
+      }
+    }
+    this.gridService.mouseUp();
+    console.log('MOUSE HAS BEEN RELEASED');
+  }
+
+  private mouseOver() {
+    if (this.gridService.getMouseState() && !this.gridService.isNodeMoving()) { this.toggleTileWall(); } else { return; }
+  }
+
+  mouseLeave() {
+    if (this.gridService.getMouseState()) {
+      console.log('MOUSE LEAVE TRIGGERED WHILE MOUSE IS PRESSED');
+      if (this.gridService.getMovingNode() === startNodeName) {
+        this.tileIsStartNode = false;
+      } else if (this.gridService.getMovingNode() === endNodeName) {
+        this.tileIsEndNode = false;
+      }
+    }
+  }
+
+  mouseEnter() {
+    if (this.gridService.getMouseState()) {
+      console.log('MOUSE ENTER TRIGGERED WHILE MOUSE IS PRESSED');
+      if (this.gridService.getMovingNode() === startNodeName) {
+        this.tileIsStartNode = true;
+      } else if (this.gridService.getMovingNode() === endNodeName) {
+        this.tileIsEndNode = true;
+      }
+    }
   }
 }

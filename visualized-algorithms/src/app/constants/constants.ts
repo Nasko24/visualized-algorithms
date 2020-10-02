@@ -52,3 +52,8 @@ export const infinity = 1073741824;
 
 export const defaultStartNode = [13, 12];
 export const defaultEndNode = [48, 12];
+
+export const startNodeName = 'starting_node';
+export const endNodeName = 'ending_node';
+
+export const emptyString = '';

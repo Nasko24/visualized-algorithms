@@ -18,9 +18,21 @@
   background-color: white;
 }
 
+.tile-node {
+  background-color: white;
+}
+
 button {
   border: none;
   width: inherit;
   height: inherit;
   font-size: 10px;
+  position: relative;
+}
+
+button mat-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

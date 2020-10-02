@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {
   defaultEndNode,
-  defaultStartNode,
+  defaultStartNode, emptyString,
   gridSize,
   gridXSize,
   gridYSize,
   speedFast,
-  tileStateNormal, tileStateWall
+  tileStateNormal, tileStatePath, tileStateVisited, tileStateWall
 } from '../constants/constants';
 import {Subject} from 'rxjs';
 import {CoordinateSet, Speed, TileLocationAndState} from '../constants/interfaces';
@@ -15,18 +15,29 @@ import {CoordinateSet, Speed, TileLocationAndState} from '../constants/interface
 export class GridService {
   private gridState: TileLocationAndState[] = new Array(gridXSize * gridYSize);
   private gridCellCount = gridSize;
+
   private stateChangeSource = new Subject<TileLocationAndState>();
+  private directStateChangeSource = new Subject<TileLocationAndState>();
+
   private currentSpeed: Speed = speedFast;
   private tileStack: TileLocationAndState[];
-  private shortestPathStack: TileLocationAndState[];
   private foundPathStack: TileLocationAndState[];
 
   stateChange$ = this.stateChangeSource.asObservable();
+  directStateChange$ = this.directStateChangeSource.asObservable();
+
+  private mousePressed: boolean;
+  private movingNode = emptyString;
+
+  private startNodeLocation: CoordinateSet;
+  private endNodeLocation: CoordinateSet;
 
   constructor() {
     this.tileStack = [];
-    this.shortestPathStack = [];
-    // this.generateFreshGrid();
+    this.foundPathStack = [];
+    this.mousePressed = false;
+    this.startNodeLocation = this.createCoordinateSet(defaultStartNode[0], defaultStartNode[1]);
+    this.endNodeLocation = this.createCoordinateSet(defaultEndNode[0], defaultEndNode[1]);
   }
 
   getGridState() {
@@ -36,6 +47,10 @@ export class GridService {
   getAllTilesOfState(state: string): CoordinateSet[] {
     const tiles: CoordinateSet[] = [];
     for (const tile of this.gridState) {
+      if (this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getStartNodeLocation()) ||
+          this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getEndNodeLocation())) {
+        continue;
+      }
       if (tile.tileState === state) {
         const coordinateSetTile: CoordinateSet = {
           x: tile.coordinateX,
@@ -54,6 +69,10 @@ export class GridService {
 
   emitStateChangeForLocation(data: TileLocationAndState) {
     this.stateChangeSource.next(data);
+  }
+
+  emitDirectStateChange(data: TileLocationAndState) {
+    this.directStateChangeSource.next(data);
   }
 
   setCurrentSpeed(speed: Speed) {
@@ -75,26 +94,67 @@ export class GridService {
         this.emitStateChangeForLocation(stateData);
       }
     }
+    this.resetStartAndEndNodes();
+
     this.clearTileStack();
-    this.clearShortestPathStack();
+    this.clearPathStack();
   }
 
   private clearTileStack() {
     this.tileStack = [];
   }
 
-  private clearShortestPathStack() {
-    this.shortestPathStack = [];
+  private clearPathStack() {
+    this.foundPathStack = [];
+  }
+
+  private resetStartAndEndNodes() {
+    this.emitDirectStateChange(this.getStartNodeLocationAndState(tileStateNormal));
+    this.emitDirectStateChange(this.getEndNodeLocationAndState(tileStateNormal));
+  }
+
+  setStartNodeLocation(startNodeCoordinates: number[]) {
+    this.startNodeLocation = { x: startNodeCoordinates[0], y: startNodeCoordinates[1] };
   }
 
   getStartNodeLocation(): CoordinateSet {
-    // TODO: service needs to know the actual start node location if its been moved
-    return this.createCoordinateSet(defaultStartNode[0], defaultStartNode[1]);
+    return this.startNodeLocation;
+  }
+
+  getStartNodeLocationArray(): number[] {
+    return [this.startNodeLocation.x, this.startNodeLocation.y];
+  }
+
+  getStartNodeLocationAndState(state: string = null): TileLocationAndState {
+    for (const tile of this.gridState) {
+      if (this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getStartNodeLocation())) {
+        if (state === null) { return tile; } else { tile.tileState = state; return tile; }
+      }
+    }
+    console.log('%cCould not find START node in grid %O', 'color: red');
+    throw new Error('Could not find START node in grid...');
+  }
+
+  setEndNodeLocation(endNodeCoordinates: number[]) {
+    this.endNodeLocation = { x: endNodeCoordinates[0], y: endNodeCoordinates[1] };
   }
 
   getEndNodeLocation(): CoordinateSet {
-    // TODO: service needs to know the actual end node location
-    return this.createCoordinateSet(defaultEndNode[0], defaultEndNode[1]);
+    return this.endNodeLocation;
+  }
+
+  getEndNodeLocationArray(): number[] {
+    return [this.endNodeLocation.x, this.endNodeLocation.y];
+  }
+
+  getEndNodeLocationAndState(state: string = null): TileLocationAndState {
+    for (const tile of this.gridState) {
+      if (this.coordinateSetsAreTheSame(this.createCoordinateSet(tile.coordinateX, tile.coordinateY), this.getEndNodeLocation())) {
+        if (state === null) { return tile; } else { tile.tileState = state; return tile; }
+      }
+    }
+    console.log('%cCould not find END node in grid %O', 'color: red');
+    throw new Error('Could not find END node in grid...');
   }
 
   sleep(ms: number) {
@@ -102,24 +162,31 @@ export class GridService {
   }
 
   async applyFoundPath(speedOverride: number = null) {
-    const count = this.foundPathStack.length;
-    for (let i = 0; i < count; i++) {
-      this.emitStateChangeForLocation(this.foundPathStack.pop());
-      await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedFast.speedMS);
+    this.emitDirectStateChange(this.getStartNodeLocationAndState(tileStatePath));
+    await this.sleep(speedOverride == null ? 25 : speedOverride);
+
+    for (const tile of this.foundPathStack) {
+      this.emitStateChangeForLocation(tile);
+      await this.sleep(speedOverride == null ? 25 : speedOverride);
     }
+
+    this.emitDirectStateChange(this.getEndNodeLocationAndState(tileStatePath));
+    this.clearPathStack();
   }
 
   async applyStackAlgorithm(speedOverride: number = null) {
+    this.emitDirectStateChange(this.getStartNodeLocationAndState(tileStateVisited));
+    await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedOverride);
+
     for (const tile of this.tileStack) {
       this.emitStateChangeForLocation(tile);
       await this.sleep(speedOverride == null ? this.getCurrentSpeed().speedMS : speedOverride);
     }
-    for (const tile of this.shortestPathStack) {
-      this.emitStateChangeForLocation(tile);
-      await this.sleep(speedOverride == null ? 25 : speedOverride);
-    }
+
+    this.emitDirectStateChange(this.getEndNodeLocationAndState(tileStateVisited));
+
+    this.applyFoundPath();
     this.clearTileStack();
-    this.clearShortestPathStack();
   }
 
   async applyStackMaze(speedOverride: number = null) {
@@ -134,8 +201,8 @@ export class GridService {
     this.tileStack = tileStack;
   }
 
-  public setShortestPathStateData(shortestPathStack: TileLocationAndState[]) {
-    this.shortestPathStack = shortestPathStack;
+  public setShortestPathStateData(path: TileLocationAndState[]) {
+    this.foundPathStack = path;
   }
 
   public getGridStateData(): TileLocationAndState[] {
@@ -313,5 +380,30 @@ export class GridService {
     } else {
       return false;
     }
+  }
+
+  mouseDown() {
+    this.mousePressed = true;
+  }
+
+  mouseUp() {
+    this.mousePressed = false;
+    this.movingNode = emptyString;
+  }
+
+  getMouseState(): boolean {
+    return this.mousePressed;
+  }
+
+  moveNode(movingNode: string) {
+    this.movingNode = movingNode;
+  }
+
+  getMovingNode(): string {
+    return this.movingNode;
+  }
+
+  isNodeMoving(): boolean {
+    if (this.movingNode === emptyString) { return false; } else { return true; }
   }
 }
