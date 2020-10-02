@@ -169,7 +169,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
     } else {
       this.toggleTileWall();
     }
-    console.log('MOUSE HAS BEEN PRESSED');
   }
 
   private mouseUp() {
@@ -181,7 +180,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
       }
     }
     this.gridService.mouseUp();
-    console.log('MOUSE HAS BEEN RELEASED');
   }
 
   private mouseOver() {
@@ -190,7 +188,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
 
   mouseLeave() {
     if (this.gridService.getMouseState()) {
-      console.log('MOUSE LEAVE TRIGGERED WHILE MOUSE IS PRESSED');
       if (this.gridService.getMovingNode() === startNodeName) {
         this.tileIsStartNode = false;
       } else if (this.gridService.getMovingNode() === endNodeName) {
@@ -201,7 +198,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
 
   mouseEnter() {
     if (this.gridService.getMouseState()) {
-      console.log('MOUSE ENTER TRIGGERED WHILE MOUSE IS PRESSED');
       if (this.gridService.getMovingNode() === startNodeName) {
         this.tileIsStartNode = true;
       } else if (this.gridService.getMovingNode() === endNodeName) {
