@@ -7,12 +7,37 @@ import {
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
-import {CoordinateSet, TileLocationAndState} from '../../constants/interfaces';
+import {TileLocationAndState} from '../../constants/interfaces';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-grid-tile',
   templateUrl: './grid-tile.component.html',
-  styleUrls: ['./grid-tile.component.css']
+  styleUrls: ['./grid-tile.component.css'],
+  animations: [
+    trigger('tileState', [
+      state(tileStateNormal, style({
+        'background-color': 'white'
+      })),
+      state(tileStateWall, style({
+        'background-color': '#03213c'
+      })),
+      state(tileStateVisited, style({
+        'background-color': 'cyan'
+      })),
+      state(tileStateRevisited, style({
+        'background-color': 'mediumpurple'
+      })),
+      state(tileStatePath, style({
+        'background-color': 'orangered'
+      })),
+      transition(tileStateNormal + ' <=> ' + tileStateWall, animate(400)),
+      transition(tileStateNormal + ' => ' + tileStateVisited, animate(300)),
+      transition(tileStateVisited + ' <=> ' + tileStateRevisited, animate(300)),
+      transition(tileStateVisited + ' => ' + tileStatePath, animate(200)),
+      transition(tileStateRevisited + ' => ' + tileStatePath, animate(200))
+    ])
+  ]
 })
 export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
@@ -69,7 +94,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
       this.setCurrentTileState(tileStateWall);
       console.log('Toggle tile ' + this.gridLocation + ' to state: ' + tileStateWall);
     }
-    this.updateGrid();
   }
 
   private setCurrentTileState(tileState: string) {
