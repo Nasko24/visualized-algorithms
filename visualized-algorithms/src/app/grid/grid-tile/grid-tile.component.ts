@@ -7,12 +7,72 @@ import {
 } from '../../constants/constants';
 import {GridService} from '../grid.service';
 import {Subscription} from 'rxjs';
-import {CoordinateSet, TileLocationAndState} from '../../constants/interfaces';
+import {TileLocationAndState} from '../../constants/interfaces';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-grid-tile',
   templateUrl: './grid-tile.component.html',
-  styleUrls: ['./grid-tile.component.css']
+  styleUrls: ['./grid-tile.component.css'],
+  animations: [
+    trigger('tileState', [
+      state(tileStateNormal, style({
+        'background-color': 'white'
+      })),
+      state(tileStateWall, style({
+        'background-color': '#03213c'
+      })),
+      state(tileStateVisited, style({
+        'background-color': '#00a992'
+      })),
+      state(tileStateRevisited, style({
+        'background-color': 'mediumpurple'
+      })),
+      state(tileStatePath, style({
+        'background-color': 'orangered'
+      })),
+      transition(tileStateNormal + ' <=> ' + tileStateWall, animate(500)),
+      transition(tileStateVisited + ' <=> ' + tileStateRevisited, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(300)
+      ]),
+      transition(tileStateVisited + ' => ' + tileStatePath, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(500)
+      ]),
+      transition(tileStateRevisited + ' => ' + tileStatePath, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(500)
+      ]),
+      transition(tileStateRevisited + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStateVisited + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStatePath + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStateNormal + ' => ' + tileStateVisited, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(300)
+      ])
+    ])
+  ]
 })
 export class GridTileComponent implements OnInit, OnDestroy {
   @Input() location: number;
@@ -69,7 +129,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
       this.setCurrentTileState(tileStateWall);
       console.log('Toggle tile ' + this.gridLocation + ' to state: ' + tileStateWall);
     }
-    this.updateGrid();
   }
 
   private setCurrentTileState(tileState: string) {
@@ -169,7 +228,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
     } else {
       this.toggleTileWall();
     }
-    console.log('MOUSE HAS BEEN PRESSED');
   }
 
   private mouseUp() {
@@ -181,7 +239,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
       }
     }
     this.gridService.mouseUp();
-    console.log('MOUSE HAS BEEN RELEASED');
   }
 
   private mouseOver() {
@@ -190,7 +247,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
 
   mouseLeave() {
     if (this.gridService.getMouseState()) {
-      console.log('MOUSE LEAVE TRIGGERED WHILE MOUSE IS PRESSED');
       if (this.gridService.getMovingNode() === startNodeName) {
         this.tileIsStartNode = false;
       } else if (this.gridService.getMovingNode() === endNodeName) {
@@ -201,7 +257,6 @@ export class GridTileComponent implements OnInit, OnDestroy {
 
   mouseEnter() {
     if (this.gridService.getMouseState()) {
-      console.log('MOUSE ENTER TRIGGERED WHILE MOUSE IS PRESSED');
       if (this.gridService.getMovingNode() === startNodeName) {
         this.tileIsStartNode = true;
       } else if (this.gridService.getMovingNode() === endNodeName) {

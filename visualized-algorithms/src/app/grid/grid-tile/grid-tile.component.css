@@ -24,6 +24,7 @@
 
 button {
   border: none;
+  outline: none;
   width: inherit;
   height: inherit;
   font-size: 10px;

@@ -1,13 +1,9 @@
-<button [ngClass]="{'tile-normal' : this.isTileStateNormal(),
-                    'tile-wall' : this.isTileStateWall(),
-                    'tile-visited-cyan' : this.isTileStateVisited(),
-                    'tile-visited-purple' : this.isTileStateRevisited(),
-                    'tile-path' : this.isTileStatePath()}"
-          (mousedown)="mouseDown()"
+<button (mousedown)="mouseDown()"
           (mouseup)="mouseUp()"
           (mouseover)="mouseOver()"
           (mouseleave)="mouseLeave()"
-          (mouseenter)="mouseEnter()">
-  <mat-icon *ngIf="tileIsStartNode">arrow_forward_ios</mat-icon>
-  <mat-icon *ngIf="tileIsEndNode">room</mat-icon>
+          (mouseenter)="mouseEnter()"
+        [@tileState]=this.tileState>
+    <mat-icon *ngIf="tileIsStartNode">arrow_forward_ios</mat-icon>
+    <mat-icon *ngIf="tileIsEndNode">room</mat-icon>
 </button>

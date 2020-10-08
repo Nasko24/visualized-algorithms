@@ -15,9 +15,12 @@ export class MazesService {
         const mazeObj = new RecursiveBacktrackerMaze(this.gridService);
         this.gridService.setGridToAllWalls();
 
-        this.gridService.setGridStateData(mazeObj.generateRecursiveBacktrackerMaze(this.gridService.createCoordinateSet(1, 1)));
+        // sleep to let the animation finish
+        this.gridService.sleep(1500).then(() => {
+          this.gridService.setGridStateData(mazeObj.generateRecursiveBacktrackerMaze(this.gridService.createCoordinateSet(1, 1)));
 
-        this.gridService.applyStackMaze();
+          this.gridService.applyStackMaze();
+        });
         break;
       }
       default:
