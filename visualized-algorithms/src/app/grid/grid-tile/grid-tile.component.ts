@@ -23,7 +23,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         'background-color': '#03213c'
       })),
       state(tileStateVisited, style({
-        'background-color': 'cyan'
+        'background-color': '#00a992'
       })),
       state(tileStateRevisited, style({
         'background-color': 'mediumpurple'
@@ -31,11 +31,46 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
       state(tileStatePath, style({
         'background-color': 'orangered'
       })),
-      transition(tileStateNormal + ' <=> ' + tileStateWall, animate(400)),
-      transition(tileStateNormal + ' => ' + tileStateVisited, animate(300)),
-      transition(tileStateVisited + ' <=> ' + tileStateRevisited, animate(300)),
-      transition(tileStateVisited + ' => ' + tileStatePath, animate(200)),
-      transition(tileStateRevisited + ' => ' + tileStatePath, animate(200))
+      transition(tileStateNormal + ' <=> ' + tileStateWall, animate(500)),
+      transition(tileStateVisited + ' <=> ' + tileStateRevisited, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(300)
+      ]),
+      transition(tileStateVisited + ' => ' + tileStatePath, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(500)
+      ]),
+      transition(tileStateRevisited + ' => ' + tileStatePath, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(500)
+      ]),
+      transition(tileStateRevisited + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStateVisited + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStatePath + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStateNormal + ' => ' + tileStateVisited, [
+        style({
+          transform: 'scale(0.5)'
+        }),
+        animate(200, style({
+          'background-color': 'yellow'
+        })),
+        animate(300)
+      ])
     ])
   ]
 })
