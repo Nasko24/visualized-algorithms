@@ -53,6 +53,10 @@ export const infinity = 1073741824;
 export const defaultStartNode = [13, 12];
 export const defaultEndNode = [48, 12];
 
+export const defaultGridWidth = (24 * gridXSize) + (gridXSize + 1);
+export const defaultGridHeight = (24 * gridYSize) + (gridYSize + 1);
+export const defaultTileSize = 24;
+
 export const startNodeName = 'starting_node';
 export const endNodeName = 'ending_node';
 

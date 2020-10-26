@@ -61,7 +61,10 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
       ]),
       transition(tileStateRevisited + ' => ' + tileStateNormal, animate(500)),
       transition(tileStateVisited + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStateRevisited + ' => ' + tileStateWall, animate(500)),
+      transition(tileStateVisited + ' => ' + tileStateWall, animate(500)),
       transition(tileStatePath + ' => ' + tileStateNormal, animate(500)),
+      transition(tileStatePath + ' => ' + tileStateWall, animate(500)),
       transition(tileStateNormal + ' => ' + tileStateVisited, [
         style({
           transform: 'scale(0.5)'

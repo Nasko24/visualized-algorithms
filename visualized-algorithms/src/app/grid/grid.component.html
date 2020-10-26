@@ -1,4 +1,5 @@
-<div class="flex-container">
+<div class="flex-container"
+  [ngStyle]="{'width': this.windowWidth, 'height': this.windowHeight}">
   <app-grid-tile class="tile"
                  *ngFor="let cell of gridCells; let i = index;"
                  [location]="i"></app-grid-tile>
