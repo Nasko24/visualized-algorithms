@@ -1,6 +1,8 @@
 <div class="flex-container"
-  [ngStyle]="{'width': this.windowWidth, 'height': this.windowHeight}">
+  [ngClass]="{'grid-size-eight' : largeGrid, 'grid-size-four' : !largeGrid}"
+  (window:resize)="onResize()">
   <app-grid-tile class="tile"
                  *ngFor="let cell of gridCells; let i = index;"
+                 [ngClass]="{'tile-size-eight' : largeGrid, 'tile-size-four' : !largeGrid}"
                  [location]="i"></app-grid-tile>
 </div>

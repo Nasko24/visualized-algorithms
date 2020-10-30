@@ -7,8 +7,6 @@
   botton: 0;
   margin: auto;
 
-  width: 1551px;
-  height: 601px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -17,9 +15,27 @@
 
 .flex-container > .tile {
   background-color: white;
-  width: 24px;
-  height: 24px;
   margin: 0.5px;
   text-align: center;
   font-size: 10px;
+}
+
+.grid-size-four {
+  width: 1551px;
+  height: 601px;
+}
+
+.grid-size-eight {
+  width: 1799px;
+  height: 697px;
+}
+
+.tile-size-four {
+  width: 24px;
+  height: 24px;
+}
+
+.tile-size-eight {
+  width: 28px;
+  height: 28px;
 }
