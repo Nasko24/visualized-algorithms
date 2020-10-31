@@ -1,5 +1,36 @@
-<div class="flex-container">
+<div class="flex-container"
+  [ngClass]="{'grid-size-one' : getGridSize(0),
+              'grid-size-two' : getGridSize(1),
+              'grid-size-three' : getGridSize(2),
+              'grid-size-four' : getGridSize(3),
+              'grid-size-five' : getGridSize(4),
+              'grid-size-six' : getGridSize(5),
+              'grid-size-seven' : getGridSize(6),
+              'grid-size-eight' : getGridSize(7),
+              'grid-size-nine' : getGridSize(8),
+              'grid-size-ten' : getGridSize(9),
+              'grid-size-eleven' : getGridSize(10),
+              'grid-size-twelve' : getGridSize(11),
+              'grid-size-thirteen' : getGridSize(12),
+              'grid-size-fourteen' : getGridSize(13),
+              'grid-size-fifteen' : getGridSize(14) }"
+  (window:resize)="onResize()">
   <app-grid-tile class="tile"
                  *ngFor="let cell of gridCells; let i = index;"
+                 [ngClass]="{'tile-size-one' : getGridSize(0),
+                             'tile-size-two' : getGridSize(1),
+                             'tile-size-three' : getGridSize(2),
+                             'tile-size-four' : getGridSize(3),
+                             'tile-size-five' : getGridSize(4),
+                             'tile-size-six' : getGridSize(5),
+                             'tile-size-seven' : getGridSize(6),
+                             'tile-size-eight' : getGridSize(7),
+                             'tile-size-nine' : getGridSize(8),
+                             'tile-size-ten' : getGridSize(9),
+                             'tile-size-eleven' : getGridSize(10),
+                             'tile-size-twelve' : getGridSize(11),
+                             'tile-size-thirteen' : getGridSize(12),
+                             'tile-size-fourteen' : getGridSize(13),
+                             'tile-size-fifteen' : getGridSize(14) }"
                  [location]="i"></app-grid-tile>
 </div>
