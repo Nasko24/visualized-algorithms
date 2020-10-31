@@ -13,32 +13,55 @@ export class GridComponent implements OnInit {
 
   public windowWidth: number = defaultGridWidth;
   public windowHeight: number = defaultGridHeight;
-  public tileSize: number = defaultTileSize;
 
-  largeGrid = false;
+  public sizes: boolean[] = [false, false, false, false, false,
+                              false, false, false, false, false,
+                              false, false, false, false, false];
 
-  constructor(public gridService: GridService) {
-    // for (let i = 28; i >= 14; i--) {
-    //   const gridWidth = (i * gridXSize) + (gridXSize + 1);
-    //   const gridHeight = (i * gridYSize) + (gridYSize + 1);
-    //
-    //   console.log('Grid dimensions: ' + gridWidth + ' x ' + gridHeight + ' | Tile Size: ' + i);
-    //
-    //   if (window.innerWidth >= gridWidth && window.innerHeight >= gridHeight) {
-    //     this.windowWidth = gridWidth;
-    //     this.windowHeight = gridHeight;
-    //     this.tileSize = i;
-    //     break;
-    //   }
-    // }
-  }
+  private currentSelectedSizeIndex: number = null;
+
+  constructor(public gridService: GridService) { }
 
   ngOnInit() {
     this.gridCells = Array(this.gridService.getGridCellCount());
-    this.largeGrid = true;
+    this.calculateGridSize();
   }
 
   onResize() {
     console.log('Window resized to: ' + window.innerWidth + ' x ' + window.innerHeight);
+    this.calculateGridSize();
+  }
+
+  calculateGridSize() {
+    for (let i = 28; i >= 14; i--) {
+      const gridWidth = (i * gridXSize) + (gridXSize + 1);
+      const gridHeight = (i * gridYSize) + (gridYSize + 1);
+
+      if (window.innerWidth >= gridWidth && window.innerHeight >= gridHeight) {
+        this.windowWidth = gridWidth;
+        this.windowHeight = gridHeight;
+        this.resetSizes();
+        this.setGridSize(i - 14);
+        this.setCurrentSizeIndex(i - 14);
+        break;
+      }
+    }
+  }
+
+  getGridSize(sizeIndex: number) {
+    return this.sizes[sizeIndex];
+  }
+
+  setGridSize(sizeIndex: number) {
+    this.sizes[sizeIndex] = true;
+  }
+
+  private resetSizes() {
+    this.sizes[this.currentSelectedSizeIndex] = false;
+    this.setCurrentSizeIndex(null);
+  }
+
+  private setCurrentSizeIndex(value: any) {
+    this.currentSelectedSizeIndex = value;
   }
 }
