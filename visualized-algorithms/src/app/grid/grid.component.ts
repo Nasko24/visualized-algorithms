@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { GridService } from './grid.service';
-import {defaultGridHeight, defaultGridWidth, defaultTileSize, gridXSize, gridYSize} from '../constants/constants';
+import {gridXSize, gridYSize} from '../constants/constants';
 
 @Component({
   selector: 'app-grid',
@@ -10,9 +10,6 @@ import {defaultGridHeight, defaultGridWidth, defaultTileSize, gridXSize, gridYSi
 export class GridComponent implements OnInit {
 
   private gridCells: number[];
-
-  public windowWidth: number = defaultGridWidth;
-  public windowHeight: number = defaultGridHeight;
 
   public sizes: boolean[] = [false, false, false, false, false,
                               false, false, false, false, false,
@@ -38,8 +35,6 @@ export class GridComponent implements OnInit {
       const gridHeight = (i * gridYSize) + (gridYSize + 1);
 
       if (window.innerWidth >= gridWidth && window.innerHeight >= gridHeight) {
-        this.windowWidth = gridWidth;
-        this.windowHeight = gridHeight;
         this.resetSizes();
         this.setGridSize(i - 14);
         this.setCurrentSizeIndex(i - 14);
