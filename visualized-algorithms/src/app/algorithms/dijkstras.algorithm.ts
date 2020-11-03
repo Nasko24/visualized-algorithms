@@ -23,7 +23,7 @@ export class DijkstrasAlgorithm {
     console.log('Starting algorithm...');
 
     let currentTile: CoordinateSet = startTile;
-    // continue running loop until all tiles have been visited or end tile has been found
+    // continue running loop until all tiles have been visited
     while (this.unvisitedTiles.length > 0) {
 
       const unvisitedNeighbors: CoordinateSet[] = this.getUnvisitedNeighbors(currentTile);
