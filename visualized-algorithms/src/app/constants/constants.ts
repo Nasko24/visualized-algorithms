@@ -22,10 +22,10 @@ export const algorithms: Algorithm[] = [
 ];
 
 export const recursiveBacktracker: Maze = { name: 'Recursive Backtracker', startingLocation: [1, 1] };
-export const kruskalsAlgorithm: Maze = { name: 'Kruskal\'s Algorithm' };
+export const primsAlgorithm: Maze = { name: 'Prim\'s Algorithm' };
 export const mazes: Maze[] = [
   recursiveBacktracker,
-  kruskalsAlgorithm
+  primsAlgorithm
 ];
 
 export const speedSlow: Speed = { speed: 'Slow', speedMS: 200 };
