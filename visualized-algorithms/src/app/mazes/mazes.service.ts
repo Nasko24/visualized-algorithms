@@ -19,8 +19,7 @@ export class MazesService {
         // sleep to let the animation finish
         this.gridService.sleep(1500).then(() => {
           this.gridService.setGridStateData(mazeObj.generateRecursiveBacktrackerMaze(
-            this.gridService.createCoordinateSet(maze.startingLocation[0], maze.startingLocation[1]
-            )));
+            this.gridService.createCoordinateSet(maze.startingLocation[0], maze.startingLocation[1])));
 
           this.gridService.applyStackMaze();
         });
@@ -33,7 +32,8 @@ export class MazesService {
 
         // sleep to let the animation finish
         this.gridService.sleep(1500).then(() => {
-          this.gridService.setGridStateData(mazeObj.generatePrimsAlgorithmMaze());
+          this.gridService.setGridStateData(mazeObj.generatePrimsAlgorithmMaze(
+            this.gridService.createCoordinateSet(maze.startingLocation[0], maze.startingLocation[1])));
 
           this.gridService.applyStackMaze();
         });

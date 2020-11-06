@@ -382,6 +382,14 @@ export class GridService {
     }
   }
 
+  private withinMazeLimit(tile: CoordinateSet): boolean {
+    if (tile.x < gridXSize - 1 && tile.x > 0 && tile.y < gridYSize - 1 && tile.y > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   mouseDown() {
     this.mousePressed = true;
   }
@@ -405,5 +413,16 @@ export class GridService {
 
   isNodeMoving(): boolean {
     if (this.movingNode === emptyString) { return false; } else { return true; }
+  }
+
+  getTileNeighbor(tile: CoordinateSet, x: number, y: number): CoordinateSet {
+    const neighbor: CoordinateSet = { x: tile.x + x, y: tile.y + y};
+    if (this.withinGridLimit(neighbor)) {
+      return neighbor;
+    } else { return null; }
+  }
+
+  getTileBetween(tile1: CoordinateSet, tile2: CoordinateSet): CoordinateSet {
+    return { x: (tile1.x + tile2.x) / 2, y: (tile1.y + tile2.y) / 2 };
   }
 }
