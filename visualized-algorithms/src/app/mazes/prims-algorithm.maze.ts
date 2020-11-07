@@ -1,13 +1,12 @@
 import {GridService} from '../grid/grid.service';
 import {CoordinateSet, TileLocationAndState} from '../constants/interfaces';
-import {tileStateWall} from '../constants/constants';
 
 export class PrimsAlgorithmMaze {
   private gridStack: TileLocationAndState[];
   private frontierTiles: Set<number>;
   private unavailableTiles: Set<number>;
 
-constructor(public gridService: GridService) {
+  constructor(public gridService: GridService) {
     this.gridStack = [];
     this.frontierTiles = new Set<number>();
     this.unavailableTiles = new Set<number>();
@@ -22,15 +21,12 @@ constructor(public gridService: GridService) {
     this.unavailableTiles.add(this.gridService.getTileIndex(startingTile));
 
     // while we still have frontier tiles
-    let count = 0;
     while (this.frontierTiles.size !== 0) {
       // keep looping
-      count++;
 
       // choose random frontier tile
       const arrayItems = Array.from(this.frontierTiles);
       const randomFrontierTile: number = arrayItems[Math.floor(Math.random() * arrayItems.length)];
-      // console.log('Random frontier tile chosen: ' + JSON.stringify(this.gridService.getTileCoordinates(randomFrontierTile)));
 
       // connect frontier tile to other discovered tiles
       this.connectFrontierTile(randomFrontierTile);
@@ -39,19 +35,11 @@ constructor(public gridService: GridService) {
       this.frontierTiles.delete(randomFrontierTile);
 
       // add frontier tiles
-      this.getAvailableFrontierTiles(this.gridService.getTileCoordinates(randomFrontierTile)).forEach((item) => {
-        this.frontierTiles.add(item);
-      });
-
-      // this.gridStack.forEach((item) => {
-      //   console.log('GridStack contents: [' + item.coordinateX + ', ' + item.coordinateY + ']');
-      // });
-      // this.frontierTiles.forEach((item) => {
-      //   console.log('Frontier Tiles contents: ' + item);
-      // });
-      // this.frontierTiles.forEach((item) => {
-      //   console.log('Unavailable Tiles contents: ' + item);
-      // });
+      if (this.gridService.withinMazeLimit(this.gridService.getTileCoordinates(randomFrontierTile))) {
+        this.getAvailableFrontierTiles(this.gridService.getTileCoordinates(randomFrontierTile)).forEach((item) => {
+          this.frontierTiles.add(item);
+        });
+      }
     }
 
     return this.gridStack;
@@ -87,15 +75,23 @@ constructor(public gridService: GridService) {
     const arrayItems = Array.from(availableConnections);
     const randomlyChosenConnection: CoordinateSet = arrayItems[Math.floor(Math.random() * arrayItems.length)];
 
-    // add frontier tile and connecting tile to gridStack
-    this.gridStack.push(this.gridService.createTileLocationAndStateObject(this.gridService.getTileCoordinates(frontierTile)));
+    // add frontier tile and connecting tile to stacks
+    if (this.gridService.withinMazeLimit(this.gridService.getTileCoordinates(frontierTile))) {
+      this.addTileToGridStack(this.gridService.getTileCoordinates(frontierTile));
+      this.addTileToUnavailableTiles(frontierTile);
+    }
     const tileInBetween: CoordinateSet = this.gridService.getTileBetween(
       this.gridService.getTileCoordinates(frontierTile), randomlyChosenConnection
     );
-    this.gridStack.push(this.gridService.createTileLocationAndStateObject(tileInBetween));
+    this.addTileToGridStack(tileInBetween);
+    this.addTileToUnavailableTiles(this.gridService.getTileIndex(tileInBetween));
+  }
 
-    // add chosen tile and connecting tile to unavailableTiles
-    this.unavailableTiles.add(frontierTile);
-    this.unavailableTiles.add(this.gridService.getTileIndex(tileInBetween));
+  private addTileToGridStack(tile: CoordinateSet) {
+    this.gridStack.push(this.gridService.createTileLocationAndStateObject(tile));
+  }
+
+  private addTileToUnavailableTiles(tile: number) {
+    this.unavailableTiles.add(tile);
   }
 }

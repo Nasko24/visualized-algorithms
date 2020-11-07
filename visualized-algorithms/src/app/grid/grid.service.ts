@@ -6,7 +6,7 @@ import {
   gridXSize,
   gridYSize,
   speedFast,
-  tileStateNormal, tileStatePath, tileStateVisited, tileStateWall
+  tileStateNormal, tileStatePath, tileStateRevisited, tileStateVisited, tileStateWall
 } from '../constants/constants';
 import {Subject} from 'rxjs';
 import {CoordinateSet, Speed, TileLocationAndState} from '../constants/interfaces';
@@ -82,6 +82,21 @@ export class GridService {
 
   getCurrentSpeed(): Speed {
     return this.currentSpeed;
+  }
+
+  clearPath() {
+    this.resetStartAndEndNodes();
+    this.getAllTilesOfState(tileStatePath).forEach((tile) => {
+      this.emitStateChangeForLocation(this.createTileLocationAndStateObject(tile));
+    });
+    this.getAllTilesOfState(tileStateVisited).forEach((tile) => {
+      this.emitStateChangeForLocation(this.createTileLocationAndStateObject(tile));
+    });
+    this.getAllTilesOfState(tileStateRevisited).forEach((tile) => {
+      this.emitStateChangeForLocation(this.createTileLocationAndStateObject(tile));
+    });
+    this.clearPathStack();
+    this.clearTileStack();
   }
 
   clearGrid() {
@@ -374,7 +389,7 @@ export class GridService {
     }
   }
 
-  private withinGridLimit(tile: CoordinateSet): boolean {
+  withinGridLimit(tile: CoordinateSet): boolean {
     if (tile.x < gridXSize && tile.x > -1 && tile.y < gridYSize && tile.y > -1) {
       return true;
     } else {
@@ -382,7 +397,7 @@ export class GridService {
     }
   }
 
-  private withinMazeLimit(tile: CoordinateSet): boolean {
+  withinMazeLimit(tile: CoordinateSet): boolean {
     if (tile.x < gridXSize - 1 && tile.x > 0 && tile.y < gridYSize - 1 && tile.y > 0) {
       return true;
     } else {
