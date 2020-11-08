@@ -5,6 +5,7 @@ export interface Algorithm {
 export interface Maze {
   name: string;
   startingLocation?: number[];
+  rowsToProcess?: number;
 }
 
 export interface Speed {

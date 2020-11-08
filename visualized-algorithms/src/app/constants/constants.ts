@@ -23,7 +23,7 @@ export const algorithms: Algorithm[] = [
 
 export const recursiveBacktracker: Maze = { name: 'Recursive Backtracker', startingLocation: [1, 1] };
 export const primsAlgorithm: Maze = { name: 'Prim\'s Algorithm', startingLocation: [31, 12] };
-export const sidewinderAlgorithm: Maze = { name: 'Sidewinder', startingLocation: [1, 22]};
+export const sidewinderAlgorithm: Maze = { name: 'Sidewinder', startingLocation: [1, 22], rowsToProcess: 11 };
 export const mazes: Maze[] = [
   recursiveBacktracker,
   primsAlgorithm,
