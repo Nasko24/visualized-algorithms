@@ -60,7 +60,7 @@ export class GridService {
       }
     }
 
-    if (tiles.length === 0) { return null; } else { return tiles; }
+    return tiles;
   }
 
   getGridCellCount() {

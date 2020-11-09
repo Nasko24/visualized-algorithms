@@ -54,6 +54,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onClickVisualize() {
+    this.gridService.clearPath();
     this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
     this.algorithmsService.applyAlgorithm(this.currentAlgorithm);
     this.algorithmButtonToggle = !this.algorithmButtonToggle;
