@@ -196,11 +196,9 @@ export class GridTileComponent implements OnInit, OnDestroy {
   // to that grid location to change the state of the tile
   private setStartAndEndTiles() {
     if (this.arraysAreEqual(this.gridLocation, this.gridService.getStartNodeLocationArray())) {
-      // TODO: apply the start and end node icons to the tile
       this.setCurrentTileState(tileStateNormal);
       this.tileIsStartNode = true;
     } else if (this.arraysAreEqual(this.gridLocation, this.gridService.getEndNodeLocationArray())) {
-      // TODO: apply the start and end node icons to the tile
       this.setCurrentTileState(tileStateNormal);
       this.tileIsEndNode = true;
     }

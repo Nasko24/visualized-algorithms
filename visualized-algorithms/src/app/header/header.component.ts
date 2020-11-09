@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onAlgorithmChosen(algorithm: Algorithm) {
-    // TODO: set all tiles with VISITED and REVISITED state to NORMAL
+    this.gridService.clearPath();
     this.currentAlgorithm = algorithm;
   }
 
@@ -54,6 +54,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onClickVisualize() {
+    this.gridService.clearPath();
     this.algorithmButtonToggle = !this.algorithmButtonToggle; // toggle logic for sample
     this.algorithmsService.applyAlgorithm(this.currentAlgorithm);
     this.algorithmButtonToggle = !this.algorithmButtonToggle;
@@ -66,5 +67,9 @@ export class HeaderComponent implements OnInit {
 
   onClickBoardClear() {
     this.gridService.clearGrid();
+  }
+
+  onClickPathClear() {
+    this.gridService.clearPath();
   }
 }

@@ -10,7 +10,7 @@ export class AlgorithmsService {
   applyAlgorithm(algorithm: Algorithm) {
     switch (algorithm.name) {
       case algorithms[0].name: { // dijkstra's algorithm
-        console.log('Executing algorithm ' + algorithm.name);
+        console.log('Executing pathfinding algorithm ' + algorithm.name);
         const algorithmObj = new DijkstrasAlgorithm(this.gridService);
 
         this.gridService.setGridStateData(algorithmObj.applyDijkstrasAlgorithm(

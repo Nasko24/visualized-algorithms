@@ -21,9 +21,13 @@ export const algorithms: Algorithm[] = [
   // biderectionalSwarmAlgorithm
 ];
 
-export const recursiveBacktracker: Maze = { name: 'Recursive Backtracker', startingLocation: [0, 0] };
+export const recursiveBacktracker: Maze = { name: 'Recursive Backtracker', startingLocation: [1, 1] };
+export const primsAlgorithm: Maze = { name: 'Prim\'s Algorithm', startingLocation: [31, 12] };
+export const sidewinderAlgorithm: Maze = { name: 'Sidewinder', startingLocation: [1, 22], rowsToProcess: 11 };
 export const mazes: Maze[] = [
-  recursiveBacktracker
+  recursiveBacktracker,
+  primsAlgorithm,
+  sidewinderAlgorithm
 ];
 
 export const speedSlow: Speed = { speed: 'Slow', speedMS: 200 };
@@ -52,10 +56,6 @@ export const infinity = 1073741824;
 
 export const defaultStartNode = [13, 12];
 export const defaultEndNode = [48, 12];
-
-export const defaultGridWidth = (24 * gridXSize) + (gridXSize + 1);
-export const defaultGridHeight = (24 * gridYSize) + (gridYSize + 1);
-export const defaultTileSize = 24;
 
 export const startNodeName = 'starting_node';
 export const endNodeName = 'ending_node';
