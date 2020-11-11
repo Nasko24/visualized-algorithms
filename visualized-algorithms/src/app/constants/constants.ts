@@ -11,7 +11,7 @@ export const convergentSwarmAlgorithm: Algorithm = { name: 'Convergent Swarm' };
 export const biderectionalSwarmAlgorithm: Algorithm = { name: 'Bidirectional Swarm' };
 export const algorithms: Algorithm[] = [
   dijkstrasAlgorithm,
-  // aStarAlgorithm,
+  aStarAlgorithm,
   // dStarAlgorithm,
   // depthFirstSearchAlgorithm,
   // breadthFirstSearchAlgorithm,
