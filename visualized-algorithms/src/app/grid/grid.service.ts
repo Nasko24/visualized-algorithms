@@ -440,4 +440,8 @@ export class GridService {
   getTileBetween(tile1: CoordinateSet, tile2: CoordinateSet): CoordinateSet {
     return { x: (tile1.x + tile2.x) / 2, y: (tile1.y + tile2.y) / 2 };
   }
+
+  getDistanceBetweenTiles(tile1: CoordinateSet, tile2: CoordinateSet) {
+    return (Math.abs(tile1.x - tile2.x) + Math.abs(tile1.y - tile2.y));
+  }
 }
