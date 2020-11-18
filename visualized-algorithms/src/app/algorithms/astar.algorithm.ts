@@ -1,6 +1,6 @@
 import {GridService} from '../grid/grid.service';
 import {CoordinateSet, TileLocationAndState} from '../constants/interfaces';
-import {infinity, tileStateNormal, tileStateVisited} from '../constants/constants';
+import {infinity, tileStateNormal, tileStatePath, tileStateVisited} from '../constants/constants';
 
 export class AstarAlgorithm {
   private gridStack: TileLocationAndState[];
@@ -63,6 +63,9 @@ export class AstarAlgorithm {
       // add current tile to grid stack
       this.addTileToGridStack(currentTile, tileStateVisited);
     }
+
+    this.calculateShortestPath(startNodeLocation, endNodeLocation);
+
     return this.gridStack;
   }
 
@@ -120,6 +123,34 @@ export class AstarAlgorithm {
   private isUnvisited(tile: CoordinateSet) {
     for (const unvisitedTile of this.unvisitedTiles) {
       if (this.gridService.coordinateSetsAreTheSame(tile, unvisitedTile)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private calculateShortestPath(startNodeLocation: CoordinateSet, endNodeLocation: CoordinateSet) {
+    const shortestPath: TileLocationAndState[] = [];
+    let currentTile: CoordinateSet = endNodeLocation;
+    const tilesOutOfCommission: CoordinateSet[] = [];
+    while (true) {
+      const visitedNeighborsOfCurrentTile: CoordinateSet[] = this.gridService.getTileDirectNeighbors(currentTile).filter((tile) => {
+        if (this.isVisited(tile)) { return true; } else { return false; }
+      }).filter((tile) => {
+        if (this.tileExistsInList(tile, tilesOutOfCommission)) { return false; } else { return true; }
+      });
+      const leastCostlyNeighbor: CoordinateSet = this.getLeastCostlyTile(visitedNeighborsOfCurrentTile, startNodeLocation, endNodeLocation);
+      if (this.gridService.coordinateSetsAreTheSame(leastCostlyNeighbor, startNodeLocation)) { break; }
+      shortestPath.push(this.gridService.createTileLocationAndStateObject(leastCostlyNeighbor, tileStatePath));
+      tilesOutOfCommission.push(leastCostlyNeighbor);
+      currentTile = leastCostlyNeighbor;
+    }
+    this.gridService.setShortestPathStateData(shortestPath.reverse());
+  }
+
+  private tileExistsInList(inputTile: CoordinateSet, listOfTiles: CoordinateSet[]): boolean {
+    for (const tile of listOfTiles) {
+      if (this.gridService.coordinateSetsAreTheSame(tile, inputTile)) {
         return true;
       }
     }
