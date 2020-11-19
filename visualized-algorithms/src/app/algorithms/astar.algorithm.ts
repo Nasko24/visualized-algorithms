@@ -132,17 +132,46 @@ export class AstarAlgorithm {
   private calculateShortestPath(startNodeLocation: CoordinateSet, endNodeLocation: CoordinateSet) {
     const shortestPath: TileLocationAndState[] = [];
     let currentTile: CoordinateSet = endNodeLocation;
-    const tilesOutOfCommission: CoordinateSet[] = [];
+
+    const tracedTiles: CoordinateSet[] = [];
+    let popped = false;
+
     while (true) {
+      // this will return an empty array if no tiles are available as neighbors
       const visitedNeighborsOfCurrentTile: CoordinateSet[] = this.gridService.getTileDirectNeighbors(currentTile).filter((tile) => {
         if (this.isVisited(tile)) { return true; } else { return false; }
       }).filter((tile) => {
-        if (this.tileExistsInList(tile, tilesOutOfCommission)) { return false; } else { return true; }
+        if (this.tileExistsInList(tile, tracedTiles)) { return false; } else { return true; }
       });
+
+      // this will yield null if the passed array is empty
       const leastCostlyNeighbor: CoordinateSet = this.getLeastCostlyTile(visitedNeighborsOfCurrentTile, startNodeLocation, endNodeLocation);
-      if (this.gridService.coordinateSetsAreTheSame(leastCostlyNeighbor, startNodeLocation)) { break; }
-      shortestPath.push(this.gridService.createTileLocationAndStateObject(leastCostlyNeighbor, tileStatePath));
-      tilesOutOfCommission.push(leastCostlyNeighbor);
+
+      // if least costly neighbor is null, we will pop the last
+      // tile from the gridStack and make that the new current tile
+      // and continue the loop
+      if (leastCostlyNeighbor === null) {
+        const poppedTile = shortestPath.pop();
+        popped = true;
+
+        console.log('Popping tile: ' + JSON.stringify(poppedTile));
+
+        currentTile = this.gridService.createCoordinateSet(poppedTile.coordinateX, poppedTile.coordinateY);
+        continue;
+      }
+      if (this.gridService.coordinateSetsAreTheSame(leastCostlyNeighbor, startNodeLocation)) {
+        break;
+      }
+
+      if (popped) {
+        shortestPath.push(this.gridService.createTileLocationAndStateObject(currentTile, tileStatePath));
+        shortestPath.push(this.gridService.createTileLocationAndStateObject(leastCostlyNeighbor, tileStatePath));
+        popped = false;
+      } else {
+        shortestPath.push(this.gridService.createTileLocationAndStateObject(leastCostlyNeighbor, tileStatePath));
+      }
+
+      tracedTiles.push(leastCostlyNeighbor);
       currentTile = leastCostlyNeighbor;
     }
     this.gridService.setShortestPathStateData(shortestPath.reverse());
