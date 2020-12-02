@@ -3,6 +3,7 @@ import {GridService} from '../grid/grid.service';
 import {algorithms} from '../constants/constants';
 import {DijkstrasAlgorithm} from './dijkstras.algorithm';
 import {AstarAlgorithm} from './astar.algorithm';
+import {DepthFirstSearchAlgorithm} from './depth-first-search.algorithm';
 
 @Injectable({ providedIn: 'root' })
 export class AlgorithmsService {
@@ -26,6 +27,17 @@ export class AlgorithmsService {
         const algorithmObj = new AstarAlgorithm(this.gridService);
 
         this.gridService.setGridStateData(algorithmObj.applyAstarAlgorithm(
+          this.gridService.getStartNodeLocation(),
+          this.gridService.getEndNodeLocation()));
+
+        this.gridService.applyStackAlgorithm();
+        break;
+      }
+      case algorithms[2].name: {
+        console.log('Executing pathfinding algorithm ' + algorithm.name);
+        const algorithmObj = new DepthFirstSearchAlgorithm(this.gridService);
+
+        this.gridService.setGridStateData(algorithmObj.applyDepthFirstSearchAlgorithm(
           this.gridService.getStartNodeLocation(),
           this.gridService.getEndNodeLocation()));
 
