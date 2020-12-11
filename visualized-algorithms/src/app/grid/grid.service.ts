@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {
-  defaultEndNode,
+  defaultEndNode, defaultMazeGenerationSpeed,
   defaultStartNode, emptyString,
   gridSize,
   gridXSize,
@@ -207,7 +207,7 @@ export class GridService {
   async applyStackMaze(speedOverride: number = null) {
     for (const tile of this.tileStack) {
       this.emitStateChangeForLocation(tile);
-      await this.sleep(speedOverride == null ? 25 : speedOverride);
+      await this.sleep(speedOverride == null ? defaultMazeGenerationSpeed : speedOverride);
     }
     this.clearTileStack();
   }
@@ -237,7 +237,7 @@ export class GridService {
     try {
       if (set1.x === set2.x && set1.y === set2.y) { return true; } else { return false; }
     } catch (exception) {
-      console.log('Count not compare: ' + JSON.stringify(set1) + ' and ' + JSON.stringify(set2));
+      console.log('Could not compare: ' + JSON.stringify(set1) + ' and ' + JSON.stringify(set2));
       return false;
     }
   }

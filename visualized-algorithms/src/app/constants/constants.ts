@@ -30,6 +30,7 @@ export const mazes: Maze[] = [
   sidewinderAlgorithm
 ];
 
+export const defaultMazeGenerationSpeed = 10;
 export const sidewinderMazeRatio = 0.75;
 
 export const speedSlow: Speed = { speed: 'Slow', speedMS: 200 };

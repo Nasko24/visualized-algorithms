@@ -19,6 +19,7 @@ export class DepthFirstSearchAlgorithm {
     this.unvisitedTiles = this.gridService.getAllTilesOfState(tileStateNormal);
     this.unvisitedTiles.push(endNodeLocation);
     let currentTile: CoordinateSet = startNodeLocation;
+    this.addTileToTileStack(startNodeLocation);
 
     let popped = false;
     let poppedTile = null;
@@ -32,6 +33,12 @@ export class DepthFirstSearchAlgorithm {
       // otherwise pop the last tile and continue
       if (availableNeighbors.length === 0) {
         currentTile = this.tileStack.pop();
+        // if popped tile is undefined, the end node cant be found
+        if (currentTile === null || currentTile === undefined) {
+          console.log('End node cannot be found...');
+          console.log('Terminating algorithm execution...');
+          break;
+        }
         poppedTile = currentTile;
         popped = true;
         continue;
@@ -76,7 +83,6 @@ export class DepthFirstSearchAlgorithm {
   }
 
   private getTileNeighbors(inputTile: CoordinateSet): CoordinateSet[] {
-    // if the tile is NOT visited AND is NOT in the stack AND IS unvisited
     return this.gridService.getTileDirectNeighbors(inputTile).filter((tile) => {
       return !this.tileExistsInArray(tile, this.visitedTiles);
     }).filter((tile) => {

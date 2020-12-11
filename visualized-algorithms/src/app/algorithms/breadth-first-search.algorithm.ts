@@ -1,18 +1,26 @@
 import {GridService} from '../grid/grid.service';
 import {CoordinateSet, TileLocationAndState} from '../constants/interfaces';
 import {tileStateNormal, tileStatePath, tileStateVisited} from '../constants/constants';
+import {not} from 'rxjs/internal-compatibility';
+
+export interface TreeNode {
+  parent: CoordinateSet;
+  node: CoordinateSet;
+}
 
 export class BreadthFirstSearchAlgorithm {
   private gridStack: TileLocationAndState[];
   private visitedTiles: CoordinateSet[];
   private unvisitedTiles: CoordinateSet[];
   private availableNeighbors: CoordinateSet[];
+  private neighborTree: TreeNode[];
 
   constructor(public gridService: GridService) {
     this.gridStack = [];
     this.visitedTiles = [];
     this.unvisitedTiles = [];
     this.availableNeighbors = [];
+    this.neighborTree = [];
   }
 
   applyBreadthFirstSearchAlgorithm(startNodeLocation: CoordinateSet, endNodeLocation: CoordinateSet) {
@@ -21,13 +29,19 @@ export class BreadthFirstSearchAlgorithm {
 
     const availableNeighbors: CoordinateSet[] = this.getTileNeighbors(startNodeLocation);
     this.addTilesToAvailableNeighbors(availableNeighbors);
+    this.applyChildrenToTree(availableNeighbors, startNodeLocation);
     this.addTileToGridStack(startNodeLocation, tileStateVisited);
+    this.addTileToVisitedTiles(startNodeLocation);
+
+    this.neighborTree.push({parent: null, node: startNodeLocation});
 
     let end = false;
+    let notFound = false;
     while (this.unvisitedTiles.length !== 0) {
       // loop through all available neighbors
       let newNeighbors: CoordinateSet[] = [];
       const len = this.availableNeighbors.length;
+      if (len === 0) { notFound = true; break; }
 
       for (let i = 0; i < len; i++) {
         const neighbor = this.availableNeighbors.pop();
@@ -36,10 +50,12 @@ export class BreadthFirstSearchAlgorithm {
           break;
         }
 
-        const neighbors: CoordinateSet[] = this.getTileNeighbors(neighbor);
+        const children: CoordinateSet[] = this.getTileNeighbors(neighbor);
 
-        newNeighbors.push(...neighbors);
+        newNeighbors.push(...children);
         newNeighbors = this.removeDuplicates(newNeighbors);
+
+        this.applyChildrenToTree(children, neighbor);
 
         this.removeTileFromUnvisitedTiles(neighbor);
 
@@ -48,12 +64,14 @@ export class BreadthFirstSearchAlgorithm {
         this.addTileToGridStack(neighbor, tileStateVisited);
       }
 
-      this.addTilesToAvailableNeighbors(newNeighbors);
+      if (end || notFound) { break; }
 
-      if (end) { break; }
+      this.addTilesToAvailableNeighbors(newNeighbors);
     }
 
-    // this.calculateShortestPath();
+    if (!notFound) {
+      this.calculateShortestPath(endNodeLocation);
+    }
 
     return this.gridStack;
   }
@@ -102,5 +120,44 @@ export class BreadthFirstSearchAlgorithm {
       }
     }
     return newList;
+  }
+
+  private applyChildrenToTree(children: CoordinateSet[], parent: CoordinateSet) {
+    for (const child of children) {
+      const newNode: TreeNode = {
+        parent,
+        node: child
+      };
+      this.neighborTree.push(newNode);
+    }
+  }
+
+  private calculateShortestPath(endNodeLocation: CoordinateSet) {
+    const shortestPath: TileLocationAndState[] = [];
+    let currentNode: CoordinateSet;
+
+    // search for the endNode in the tree
+    for (const node of this.neighborTree) {
+      if (this.gridService.coordinateSetsAreTheSame(node.node, endNodeLocation)) {
+        currentNode = node.parent;
+        shortestPath.push(this.gridService.createTileLocationAndStateObject(currentNode, tileStatePath));
+      }
+    }
+
+    // search up the tree until we find a null parent
+    while (currentNode !== null) {
+      for (const node of this.neighborTree) {
+        // find the current node in the tree and take its parent as the current node
+        if (this.gridService.coordinateSetsAreTheSame(node.node, currentNode)) {
+          if (currentNode !== null) {
+            shortestPath.push(this.gridService.createTileLocationAndStateObject(currentNode, tileStatePath));
+            currentNode = node.parent;
+            break;
+          }
+        }
+      }
+    }
+
+    this.gridService.setShortestPathStateData(shortestPath.reverse());
   }
 }

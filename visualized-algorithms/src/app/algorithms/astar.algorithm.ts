@@ -26,6 +26,7 @@ export class AstarAlgorithm {
     this.addToVisitedTiles(currentTile);
     this.removeFromUnvisitedTiles(currentTile);
 
+    let notFound = false;
     while (this.unvisitedTiles.length > 0) {
       // get the available neighbors of the current tile
       const availableNeighbors: CoordinateSet[] = this.gridService.getTileDirectNeighbors(currentTile).filter((tile) => {
@@ -43,6 +44,7 @@ export class AstarAlgorithm {
       if (closestTile === null) {
         console.log('Closest tile has come up to be null...');
         console.log('Terminating algorithm execution...');
+        notFound = true;
         break;
       } else if (this.gridService.coordinateSetsAreTheSame(closestTile, endNodeLocation)) {
         break;
@@ -64,7 +66,9 @@ export class AstarAlgorithm {
       this.addTileToGridStack(currentTile, tileStateVisited);
     }
 
-    this.calculateShortestPath(startNodeLocation, endNodeLocation);
+    if (!notFound) {
+      this.calculateShortestPath(startNodeLocation, endNodeLocation);
+    }
 
     return this.gridStack;
   }
@@ -153,8 +157,6 @@ export class AstarAlgorithm {
       if (leastCostlyNeighbor === null) {
         const poppedTile = shortestPath.pop();
         popped = true;
-
-        console.log('Popping tile: ' + JSON.stringify(poppedTile));
 
         currentTile = this.gridService.createCoordinateSet(poppedTile.coordinateX, poppedTile.coordinateY);
         continue;
