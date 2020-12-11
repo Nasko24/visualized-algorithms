@@ -3,8 +3,8 @@ span {
 }
 
 .header-button {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 6px;
+  margin-right: 6px;
   background-color: cadetblue;
 }
 
@@ -12,6 +12,7 @@ span {
   margin-left: 10px;
   margin-right: 10px;
   max-width: 250px;
+  width: 250px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -31,4 +32,15 @@ mat-toolbar {
 
 .title {
   color: white;
+}
+
+.speed-action-button {
+  margin-left: 6px;
+  margin-right: 6px;
+  background-color: cadetblue;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 180px;
+  width: 180px;
 }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {
-  defaultEndNode,
+  defaultEndNode, defaultMazeGenerationSpeed,
   defaultStartNode, emptyString,
   gridSize,
   gridXSize,
@@ -207,7 +207,7 @@ export class GridService {
   async applyStackMaze(speedOverride: number = null) {
     for (const tile of this.tileStack) {
       this.emitStateChangeForLocation(tile);
-      await this.sleep(speedOverride == null ? 25 : speedOverride);
+      await this.sleep(speedOverride == null ? defaultMazeGenerationSpeed : speedOverride);
     }
     this.clearTileStack();
   }
@@ -234,7 +234,12 @@ export class GridService {
   }
 
   coordinateSetsAreTheSame(set1: CoordinateSet, set2: CoordinateSet): boolean {
-    if (set1.x === set2.x && set1.y === set2.y) { return true; } else { return false; }
+    try {
+      if (set1.x === set2.x && set1.y === set2.y) { return true; } else { return false; }
+    } catch (exception) {
+      console.log('Could not compare: ' + JSON.stringify(set1) + ' and ' + JSON.stringify(set2));
+      return false;
+    }
   }
 
   existsInTileSetArray(neighbor: CoordinateSet, array: CoordinateSet[]): boolean {
@@ -439,5 +444,9 @@ export class GridService {
 
   getTileBetween(tile1: CoordinateSet, tile2: CoordinateSet): CoordinateSet {
     return { x: (tile1.x + tile2.x) / 2, y: (tile1.y + tile2.y) / 2 };
+  }
+
+  getDistanceBetweenTiles(tile1: CoordinateSet, tile2: CoordinateSet) {
+    return (Math.abs(tile1.x - tile2.x) + Math.abs(tile1.y - tile2.y));
   }
 }

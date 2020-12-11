@@ -1,5 +1,6 @@
 import {GridService} from '../grid/grid.service';
 import {CoordinateSet, TileLocationAndState} from '../constants/interfaces';
+import {sidewinderMazeRatio} from '../constants/constants';
 
 export class SidewinderMaze {
   private gridStack: TileLocationAndState[];
@@ -28,7 +29,7 @@ export class SidewinderMaze {
         if (!this.carveUp && this.carveRight) { // if we cant carve up but can carve out
           currentTile = this.carveGridRight(currentTile);
         } else if (this.carveUp && this.carveRight) { // if we can carve up and carve out
-          if ((Math.random()) > 0.8) {
+          if ((Math.random()) > sidewinderMazeRatio) {
             currentTile = this.carveGridUp(currentTile, this.runSet);
           } else {
             currentTile = this.carveGridRight(currentTile);

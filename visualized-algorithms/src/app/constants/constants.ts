@@ -11,10 +11,10 @@ export const convergentSwarmAlgorithm: Algorithm = { name: 'Convergent Swarm' };
 export const biderectionalSwarmAlgorithm: Algorithm = { name: 'Bidirectional Swarm' };
 export const algorithms: Algorithm[] = [
   dijkstrasAlgorithm,
-  // aStarAlgorithm,
+  aStarAlgorithm,
   // dStarAlgorithm,
-  // depthFirstSearchAlgorithm,
-  // breadthFirstSearchAlgorithm,
+  depthFirstSearchAlgorithm,
+  breadthFirstSearchAlgorithm,
   // greedyAlgorithm,
   // swarmAlgorithm,
   // convergentSwarmAlgorithm,
@@ -29,6 +29,9 @@ export const mazes: Maze[] = [
   primsAlgorithm,
   sidewinderAlgorithm
 ];
+
+export const defaultMazeGenerationSpeed = 10;
+export const sidewinderMazeRatio = 0.75;
 
 export const speedSlow: Speed = { speed: 'Slow', speedMS: 200 };
 export const speedAverage: Speed = { speed: 'Average', speedMS: 150 };
