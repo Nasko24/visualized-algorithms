@@ -1,23 +1,24 @@
 mat-icon {
-  position: center;
-  margin-left: 38px;
+  padding-top: 5px;
+  padding-right: 5px;
 }
 
 .description {
-  margin-left: 10px;
-  position: center;
-  font-size: large;
+  padding-left: 3px;
 }
 
-div {
-  margin-left: 38px;
-  width:21px;
-  height:21px;
-  background-color: white;
-  border: 1px solid lightskyblue;
+.key-container {
+  display: inline-flex;
+  margin: auto;
 }
 
 mat-toolbar {
   background-color: white;
+  display: inline-flex;
+  flex-wrap: wrap;
+  height: auto;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  align-content: center;
   margin-top: 1%;
 }
